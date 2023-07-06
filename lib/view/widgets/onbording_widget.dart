@@ -38,7 +38,7 @@ class _SliderTextState extends State<SliderText> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 20.h),
           child: SizedBox(
-            height: 60.h,
+            height: 80.h,
             child: Text(
               widget.slider.description!,
               textAlign: TextAlign.center,

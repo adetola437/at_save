@@ -1,12 +1,13 @@
-import 'package:at_save/theme/colors.dart';
 import 'package:at_save/controller/sign_up_controller.dart';
-import 'package:at_save/view/widgets/button.dart';
+import 'package:at_save/theme/colors.dart';
 import 'package:at_save/view/widgets/height.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:form_validator/form_validator.dart';
 
+import '../../bloc/autthentication/authentication_bloc.dart';
 import '../../boiler_plate/stateless_view.dart';
 import '../../theme/text.dart';
 
@@ -139,7 +140,34 @@ class SignUpView extends StatelessView<SignUpScreen, SignUpController> {
                       ),
                 ),
                 Height(30.h),
-                Center(child: Button(text: 'CREATE YOUR ACCOUNT')),
+                Center(
+                    child: InkWell(onTap: () {
+                  controller.onSignUp();
+                }, child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                  builder: (context, state) {
+                    return Container(
+                      width: double.maxFinite,
+                      height: 56.h,
+                      decoration: BoxDecoration(
+                          color: AppColor.primaryColor,
+                          borderRadius: BorderRadius.circular(16.r)),
+                      child: Center(
+                        child: state is AuthenticationLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.white,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600),
+                              ),
+                      ),
+                    );
+                  },
+                ))),
                 Height(10.h),
                 Row(
                   children: [

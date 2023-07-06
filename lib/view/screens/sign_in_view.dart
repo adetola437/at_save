@@ -2,6 +2,7 @@ import 'package:at_save/controller/landing_controller.dart';
 import 'package:at_save/controller/sign_in_controller.dart';
 import 'package:at_save/view/screens/sign_up_view.dart';
 import 'package:at_save/view/widgets/button.dart';
+import 'package:at_save/view/widgets/description_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,6 +11,7 @@ import 'package:form_validator/form_validator.dart';
 import '../../boiler_plate/stateless_view.dart';
 import '../../theme/colors.dart';
 import '../../theme/text.dart';
+import '../widgets/heading.dart';
 import '../widgets/height.dart';
 
 class SignInView extends StatelessView<SignInScreen, SignInController> {
@@ -35,15 +37,11 @@ class SignInView extends StatelessView<SignInScreen, SignInController> {
                 ),
               ),
               Height(60.h),
-              Text(
-                'Sign into your\nAccount',
-                style: MyText.heading(color: AppColor.primaryColor),
+              const Heading(
+                text: 'Sign into your\nAccount',
               ),
               Height(10.h),
-              Text(
-                'log into your account',
-                style: MyText.bodySm(),
-              ),
+              const DescriptionText(text: 'log into your account'),
               Height(80.h),
               const Head(text: 'Email'),
               Height(10.h),

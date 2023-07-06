@@ -17,25 +17,52 @@ class CarouselWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          color: color, borderRadius: BorderRadius.circular(15.r)),
-      height: 170.h,
-      width: double.maxFinite,
-      child: Column(
-        children: [
-          Height(20.h),
-          Text(
-            title,
-            style:
-                MyText.bodyLg(color: const Color.fromARGB(255, 231, 231, 236)),
-          ),
-          Height(20.h),
-          Text(
-            'N${PriceFormatter.formatPrice(amount)}',
-            style: MyText.balanceLg(color: AppColor.backBackground),
-          ),
-        ],
+    return Padding(
+      padding: EdgeInsets.only(right: 10.w),
+      child: Container(
+        decoration: BoxDecoration(
+            color: color, borderRadius: BorderRadius.circular(15.r)),
+        height: 140.h,
+        width: double.maxFinite,
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+              child: SizedBox(
+                  height: 30.h,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Icon(
+                        Icons.wifi,
+                        color: Colors.white,
+                      ),
+                      Container(
+                          height: 20.h,
+                          width: 20.w,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50.r),
+                              color: AppColor.white),
+                          child: Icon(
+                            Icons.visibility,
+                            color: AppColor.secondaryColor,
+                            size: 15.sp,
+                          ))
+                    ],
+                  )),
+            ),
+            Text(
+              title,
+              style: MyText.bodyLg(
+                  color: const Color.fromARGB(255, 231, 231, 236)),
+            ),
+            Height(10.h),
+            Text(
+              'N${PriceFormatter.formatPrice(amount)}',
+              style: MyText.balanceLg(color: AppColor.backBackground),
+            ),
+          ],
+        ),
       ),
     );
   }

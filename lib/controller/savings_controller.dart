@@ -8,9 +8,12 @@ class SavingsScreen extends StatefulWidget {
   SavingsController createState() => SavingsController();
 }
 
-class SavingsController extends State<SavingsScreen> {
+class SavingsController extends State<SavingsScreen>
+    with TickerProviderStateMixin {
+  late TabController tabController;
   @override
   void initState() {
+    tabController = TabController(length: 3, vsync: this);
     super.initState();
   }
 

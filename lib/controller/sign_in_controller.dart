@@ -19,6 +19,8 @@ class SignInController extends State<SignInScreen> {
 
   @override
   void dispose() {
+    passwordController.dispose();
+    emailController.dispose();
     super.dispose();
   }
 

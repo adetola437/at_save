@@ -86,9 +86,9 @@ class MyText {
   }
 
   static TextStyle bodyLg({Color? color}) {
-    return GoogleFonts.inter(
+    return GoogleFonts.karla(
       color: color,
-      fontSize: 22.sp,
+      fontSize: 20.sp,
       fontWeight: FontWeight.w400,
     );
   }
@@ -114,6 +114,14 @@ class MyText {
       color: color,
       fontSize: 12.sp,
       fontWeight: FontWeight.w400,
+    );
+  }
+
+  static TextStyle mobileBold({Color? color}) {
+    return GoogleFonts.karla(
+      color: color,
+      fontSize: 14.sp,
+      fontWeight: FontWeight.bold,
     );
   }
 
@@ -162,7 +170,7 @@ class MyText {
   static TextStyle balanceLg({Color? color}) {
     return GoogleFonts.karla(
       color: color,
-      fontSize: 37.sp,
+      fontSize: 32.sp,
       fontWeight: FontWeight.w400,
     );
   }

@@ -19,9 +19,13 @@ class HomeController extends State<HomeScreen> {
     const CarouselWidget(
       amount: 50000,
       title: 'Total Savings',
-      color: AppColor.shade1,
+      color: AppColor.primaryColor,
     ),
-    const CarouselWidget(amount: 20000, title: 'Expenses',color: AppColor.analogousColor1,)
+    const CarouselWidget(
+      amount: 20000,
+      title: 'Expenses',
+      color: AppColor.complementaryColor1,
+    )
   ];
   @override
   void initState() {

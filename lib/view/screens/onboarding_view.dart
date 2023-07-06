@@ -1,5 +1,6 @@
 import 'package:at_save/controller/onboarding_controller.dart';
 import 'package:at_save/controller/welcome_controller.dart';
+import 'package:at_save/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,7 +19,7 @@ class OnboardingView
         child: Column(
           children: [
             SizedBox(
-              height: 570.h,
+              height: 590.h,
               child: Padding(
                 padding: const EdgeInsets.only(top: 56),
                 child: PageView.builder(
@@ -42,24 +43,30 @@ class OnboardingView
               height: 36.h,
             ),
             SizedBox(
-              height: 50.h,
+              height: 20.h,
             ),
             controller.lastPage == false
-                ? GestureDetector(
+                ? InkWell(
                     onTap: () {
                       controller.onNextClick();
                     },
-                    child: Button(
-                      text: 'Next',
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      child: Button(
+                        text: 'Next',
+                      ),
                     ),
                   )
-                : GestureDetector(
+                : InkWell(
                     onTap: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => const WelcomeScreen(),
                       ));
                     },
-                    child: Button(text: 'Get Started'),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      child: Button(text: 'Get Started'),
+                    ),
                   )
           ],
         ),
@@ -74,7 +81,9 @@ class OnboardingView
       width: controller.currentIndex == index ? 25 : 10,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: controller.currentIndex == index ? Colors.red : Colors.grey,
+        color: controller.currentIndex == index
+            ? AppColor.primaryColor
+            : AppColor.dart,
       ),
     );
   }

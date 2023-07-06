@@ -15,6 +15,7 @@ class HomePageView extends StatelessView<HomeScreen, HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.backBackground,
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
@@ -22,7 +23,7 @@ class HomePageView extends StatelessView<HomeScreen, HomeController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Height(30.h),
+              Height(20.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -62,42 +63,72 @@ class HomePageView extends StatelessView<HomeScreen, HomeController> {
               ),
               Height(20.h),
               SizedBox(
-                height: 170.h,
+                height: 140.h,
                 width: double.maxFinite,
                 child: CarouselSlider.builder(
                     itemCount: 2,
                     controller: controller.carouselController,
                     autoSliderTransitionTime: const Duration(milliseconds: 500),
                     // unlimitedMode: true,
-                    viewportFraction: 1,
+                    viewportFraction: 0.9,
                     initialPage: 0,
                     onSlideChanged: (value) => controller.togglePage(value),
                     slideTransform: const ForegroundToBackgroundTransform(),
                     slideBuilder: (index) {
-                      return Stack(
-                        children: [
-                          controller.carousel[index],
-                          Positioned(
-                            top: 130.h,
-                            left: 150.w,
-                            child: Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: List.generate(
-                                    2, (index) => dotContainer(index, context)),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
+                      return controller.carousel[index];
                     }),
               ),
               Height(20.h),
-              const Transaction(
-                color: AppColor.shade4,
-                image: 'assets/add.png',
-                text: 'Add money',
-              )
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:
+                      List.generate(2, (index) => dotContainer(index, context)),
+                ),
+              ),
+              Height(20.h),
+              Row(
+                children: [
+                  const Transaction(
+                    color: AppColor.shade4,
+                    image: 'assets/add.png',
+                    text: 'Add money',
+                  ),
+                  Width(20.w),
+                  const Transaction(
+                    color: AppColor.shade5,
+                    image: 'assets/withdraw.png',
+                    text: 'Withdraw',
+                  ),
+                ],
+              ),
+              Height(20.h),
+              Text(
+                'Get your money working for you',
+                style: MyText.mobile(),
+              ),
+              Height(15.h),
+              const SavingsCard(
+                color: AppColor.primaryColor,
+                icon: Icons.wallet,
+                text: 'Save for an Emergency',
+              ),
+              Height(10.h),
+              const SavingsCard(
+                color: AppColor.primaryColor,
+                icon: Icons.pie_chart,
+                text: 'Manage your Expenses',
+              ),
+              Height(20.h),
+              Text(
+                'Ways to earn more money',
+                style: MyText.mobile(),
+              ),
+              Height(15.h),
+              const SavingsCard(
+                  icon: Icons.people,
+                  text: 'Invite your friends and get more money',
+                  color: AppColor.complementaryColor1)
             ],
           ),
         ),
@@ -113,8 +144,74 @@ class HomePageView extends StatelessView<HomeScreen, HomeController> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: controller.currentIndex == index
-            ? AppColor.backBackground
+            ? AppColor.primaryColor
             : AppColor.primaryText,
+      ),
+    );
+  }
+}
+
+class SavingsCard extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final Color color;
+
+  const SavingsCard({
+    required this.icon,
+    required this.text,
+    required this.color,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 1,
+      child: Container(
+        height: 60.h,
+        width: double.maxFinite,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50.r),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 10.w,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    height: 40.h,
+                    width: 40.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.r),
+                      color: color.withOpacity(0.1),
+                    ),
+                    child: Icon(
+                      icon,
+                      color: color.withOpacity(0.8),
+                    ),
+                  ),
+                  Width(30.w),
+                  SizedBox(
+                    width: 160.w,
+                    child: Text(
+                      text,
+                      style: MyText.mobileMd(),
+                    ),
+                  )
+                ],
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 15.sp,
+                color: AppColor.secondaryColor,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -135,11 +232,11 @@ class Transaction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 60.h,
-      width: 180.w,
+      width: 150.w,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.r), color: color),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 30.w),
+        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
