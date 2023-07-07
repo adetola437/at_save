@@ -3,6 +3,7 @@ import 'package:at_save/view/screens/success_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../bloc/goals/goals_bloc.dart';
 import '../bloc/user/user_bloc.dart';
 
 class SuccessScreen extends StatefulWidget {
@@ -31,6 +32,7 @@ class SuccessController extends State<SuccessScreen> {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => const LandingScreen(),
     ));
-     context.read<UserBloc>().add(FetchUserEvent());
+    context.read<UserBloc>().add(FetchUserEvent());
+    context.read<GoalsBloc>().add(GetGoalsEvent());
   }
 }
