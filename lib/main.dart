@@ -1,4 +1,6 @@
 import 'package:at_save/Database/local_database.dart';
+import 'package:at_save/bloc/goals/goals_bloc.dart';
+import 'package:at_save/bloc/target/target_bloc.dart';
 import 'package:at_save/view/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'bloc/autthentication/authentication_bloc.dart';
+import 'bloc/user/user_bloc.dart';
 import 'firebase_options.dart';
 
 import 'controller/splash_controller.dart';
@@ -31,6 +34,15 @@ class MyApp extends StatelessWidget {
         providers: [
            BlocProvider<AuthenticationBloc>(
             create: (context) => AuthenticationBloc(),
+          ),
+           BlocProvider<UserBloc>(
+            create: (context) => UserBloc(),
+          ),
+          BlocProvider<TargetBloc>(
+            create: (context) => TargetBloc(),
+          ),
+           BlocProvider<GoalsBloc>(
+            create: (context) => GoalsBloc(),
           ),
         ],
         child: ScreenUtilInit(

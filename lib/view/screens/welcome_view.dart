@@ -12,7 +12,7 @@ import '../../boiler_plate/stateless_view.dart';
 import '../../controller/sign_in_controller.dart';
 import '../../theme/text.dart';
 
-class WelcomeView extends StatelessView {
+class WelcomeView extends StatelessView<WelcomeScreen, WelcomeController> {
   const WelcomeView(WelcomeController controller, {Key? key})
       : super(controller, key: key);
 
@@ -62,10 +62,7 @@ class WelcomeView extends StatelessView {
           Height(80.h),
           InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (BuildContext context) {
-                  return const SignUpScreen();
-                }));
+                controller.pushSignUp();
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 18.w),
@@ -73,13 +70,10 @@ class WelcomeView extends StatelessView {
               )),
           Height(20.h),
           InkWell(
-            onTap: (){
-               Navigator.push(context,
-                    MaterialPageRoute(builder: (BuildContext context) {
-                  return const SignInScreen();
-                }));
-            },
-            child: const OutlineButton(text: 'LOG INTO YOUR ACCOUNT'))
+              onTap: () {
+                controller.pushSignIn();
+              },
+              child: const OutlineButton(text: 'LOG INTO YOUR ACCOUNT'))
         ],
       ),
     );

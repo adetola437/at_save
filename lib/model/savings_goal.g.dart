@@ -17,33 +17,43 @@ const SavingsGoalSchema = CollectionSchema(
   name: r'SavingsGoal',
   id: 2336982407974704875,
   properties: {
-    r'currentAmount': PropertySchema(
+    r'createdDate': PropertySchema(
       id: 0,
+      name: r'createdDate',
+      type: IsarType.dateTime,
+    ),
+    r'currentAmount': PropertySchema(
+      id: 1,
       name: r'currentAmount',
       type: IsarType.double,
     ),
     r'description': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'description',
       type: IsarType.string,
     ),
     r'id': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'id',
       type: IsarType.string,
     ),
+    r'status': PropertySchema(
+      id: 4,
+      name: r'status',
+      type: IsarType.string,
+    ),
     r'targetAmount': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'targetAmount',
       type: IsarType.double,
     ),
     r'targetDate': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'targetDate',
       type: IsarType.dateTime,
     ),
     r'title': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'title',
       type: IsarType.string,
     )
@@ -70,6 +80,7 @@ int _savingsGoalEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.description.length * 3;
   bytesCount += 3 + object.id.length * 3;
+  bytesCount += 3 + object.status.length * 3;
   bytesCount += 3 + object.title.length * 3;
   return bytesCount;
 }
@@ -80,12 +91,14 @@ void _savingsGoalSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDouble(offsets[0], object.currentAmount);
-  writer.writeString(offsets[1], object.description);
-  writer.writeString(offsets[2], object.id);
-  writer.writeDouble(offsets[3], object.targetAmount);
-  writer.writeDateTime(offsets[4], object.targetDate);
-  writer.writeString(offsets[5], object.title);
+  writer.writeDateTime(offsets[0], object.createdDate);
+  writer.writeDouble(offsets[1], object.currentAmount);
+  writer.writeString(offsets[2], object.description);
+  writer.writeString(offsets[3], object.id);
+  writer.writeString(offsets[4], object.status);
+  writer.writeDouble(offsets[5], object.targetAmount);
+  writer.writeDateTime(offsets[6], object.targetDate);
+  writer.writeString(offsets[7], object.title);
 }
 
 SavingsGoal _savingsGoalDeserialize(
@@ -95,13 +108,15 @@ SavingsGoal _savingsGoalDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = SavingsGoal(
-    currentAmount: reader.readDoubleOrNull(offsets[0]) ?? 0,
-    description: reader.readString(offsets[1]),
-    id: reader.readString(offsets[2]),
+    createdDate: reader.readDateTime(offsets[0]),
+    currentAmount: reader.readDoubleOrNull(offsets[1]) ?? 0,
+    description: reader.readString(offsets[2]),
+    id: reader.readString(offsets[3]),
     myId: id,
-    targetAmount: reader.readDouble(offsets[3]),
-    targetDate: reader.readDateTime(offsets[4]),
-    title: reader.readString(offsets[5]),
+    status: reader.readStringOrNull(offsets[4]) ?? 'active',
+    targetAmount: reader.readDouble(offsets[5]),
+    targetDate: reader.readDateTime(offsets[6]),
+    title: reader.readString(offsets[7]),
   );
   return object;
 }
@@ -114,16 +129,20 @@ P _savingsGoalDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDoubleOrNull(offset) ?? 0) as P;
+      return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readDoubleOrNull(offset) ?? 0) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? 'active') as P;
     case 5:
+      return (reader.readDouble(offset)) as P;
+    case 6:
+      return (reader.readDateTime(offset)) as P;
+    case 7:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -226,6 +245,62 @@ extension SavingsGoalQueryWhere
 
 extension SavingsGoalQueryFilter
     on QueryBuilder<SavingsGoal, SavingsGoal, QFilterCondition> {
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition>
+      createdDateEqualTo(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition>
+      createdDateGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition>
+      createdDateLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition>
+      createdDateBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'createdDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition>
       currentAmountEqualTo(
     double value, {
@@ -628,6 +703,140 @@ extension SavingsGoalQueryFilter
     });
   }
 
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition> statusEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition>
+      statusGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition> statusLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition> statusBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'status',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition>
+      statusStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition> statusEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition> statusContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition> statusMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'status',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition>
+      statusIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'status',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition>
+      statusIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'status',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<SavingsGoal, SavingsGoal, QAfterFilterCondition>
       targetAmountEqualTo(
     double value, {
@@ -891,6 +1100,18 @@ extension SavingsGoalQueryLinks
 
 extension SavingsGoalQuerySortBy
     on QueryBuilder<SavingsGoal, SavingsGoal, QSortBy> {
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> sortByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> sortByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> sortByCurrentAmount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'currentAmount', Sort.asc);
@@ -925,6 +1146,18 @@ extension SavingsGoalQuerySortBy
   QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> sortByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> sortByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> sortByStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.desc);
     });
   }
 
@@ -968,6 +1201,18 @@ extension SavingsGoalQuerySortBy
 
 extension SavingsGoalQuerySortThenBy
     on QueryBuilder<SavingsGoal, SavingsGoal, QSortThenBy> {
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> thenByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> thenByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> thenByCurrentAmount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'currentAmount', Sort.asc);
@@ -1017,6 +1262,18 @@ extension SavingsGoalQuerySortThenBy
     });
   }
 
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> thenByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> thenByStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavingsGoal, SavingsGoal, QAfterSortBy> thenByTargetAmount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'targetAmount', Sort.asc);
@@ -1057,6 +1314,12 @@ extension SavingsGoalQuerySortThenBy
 
 extension SavingsGoalQueryWhereDistinct
     on QueryBuilder<SavingsGoal, SavingsGoal, QDistinct> {
+  QueryBuilder<SavingsGoal, SavingsGoal, QDistinct> distinctByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'createdDate');
+    });
+  }
+
   QueryBuilder<SavingsGoal, SavingsGoal, QDistinct> distinctByCurrentAmount() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'currentAmount');
@@ -1074,6 +1337,13 @@ extension SavingsGoalQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'id', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<SavingsGoal, SavingsGoal, QDistinct> distinctByStatus(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'status', caseSensitive: caseSensitive);
     });
   }
 
@@ -1105,6 +1375,12 @@ extension SavingsGoalQueryProperty
     });
   }
 
+  QueryBuilder<SavingsGoal, DateTime, QQueryOperations> createdDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'createdDate');
+    });
+  }
+
   QueryBuilder<SavingsGoal, double, QQueryOperations> currentAmountProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'currentAmount');
@@ -1120,6 +1396,12 @@ extension SavingsGoalQueryProperty
   QueryBuilder<SavingsGoal, String, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<SavingsGoal, String, QQueryOperations> statusProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'status');
     });
   }
 

@@ -1,11 +1,14 @@
 import 'package:at_save/controller/hompeage_controller.dart';
+import 'package:at_save/price_format.dart';
 import 'package:at_save/theme/colors.dart';
 import 'package:at_save/theme/text.dart';
 import 'package:at_save/view/widgets/height.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../bloc/user/user_bloc.dart';
 import '../../boiler_plate/stateless_view.dart';
 
 class HomePageView extends StatelessView<HomeScreen, HomeController> {
@@ -30,9 +33,21 @@ class HomePageView extends StatelessView<HomeScreen, HomeController> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Hello Adetola',
-                        style: MyText.header(),
+                      BlocBuilder<UserBloc, UserState>(
+                        builder: (context, state) {
+                          if (state is UserSuccess) {
+                            String fullname = state.user.name;
+                            String name = PriceFormatter.getFirstName(fullname);
+                            return SizedBox(
+                              width: 200.w,
+                              child: Text(
+                                'Hello $name',
+                                style: MyText.header(),
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
                       ),
                       Row(
                         children: [

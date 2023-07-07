@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CarouselWidget extends StatelessWidget {
-  final String title;
-  final double amount;
-  final Color color;
-  const CarouselWidget(
+  String title;
+  double amount;
+  Color color;
+  CarouselWidget(
       {required this.amount,
       required this.title,
       required this.color,

@@ -34,13 +34,18 @@ class _DetailsState extends State<Details> {
             Width(20.w),
             Text(
               widget.leadng,
-              style: MyText.mobile(color: AppColor.primaryText),
+              style: MyText.mobile(color: AppColor.dart),
             ),
           ],
         ),
-        Text(
-          widget.trailing,
-          style: MyText.mobile(color: AppColor.primaryText),
+        SizedBox(
+          width: 150.w,
+          child: Text(
+            widget.trailing,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.right,
+            style: MyText.mobile(color: AppColor.primaryText),
+          ),
         )
       ],
     );

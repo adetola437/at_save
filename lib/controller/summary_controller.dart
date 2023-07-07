@@ -1,14 +1,17 @@
-import 'package:at_save/theme/text.dart';
+import 'package:at_save/bloc/goals/goals_bloc.dart';
+import 'package:at_save/bloc/user/user_bloc.dart';
+import 'package:at_save/controller/landing_controller.dart';
+import 'package:at_save/controller/success_controller.dart';
+import 'package:at_save/model/savings_goal.dart';
 import 'package:at_save/view/screens/summary_view.dart';
-import 'package:at_save/view/widgets/button.dart';
-import 'package:at_save/view/widgets/height.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../view/widgets/outline_button.dart';
+import '../bloc/target/target_bloc.dart';
 
 class SummaryScreen extends StatefulWidget {
-  const SummaryScreen({super.key});
+  final SavingsGoal goal;
+  const SummaryScreen({required this.goal, super.key});
 
   @override
   SummaryController createState() => SummaryController();
@@ -27,63 +30,32 @@ class SummaryController extends State<SummaryScreen> {
 
   @override
   Widget build(BuildContext context) => SummaryView(this);
+  bool isLoading = false;
 
-  void showConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            'Confirm Target Savings',
-            style: MyText.bodyBold(),
-          ),
-          content: SingleChildScrollView(
-            child: SizedBox(
-              height: 170.h,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      height: 60.h,
-                      width: 60.h,
-                      decoration: BoxDecoration(
-                          color: Colors.yellow[100],
-                          borderRadius: BorderRadius.circular(50.r)),
-                      child: const Icon(
-                        Icons.question_mark,
-                        color: Color.fromARGB(255, 244, 220, 4),
-                      ),
-                    ),
-                  ),
-                  Height(30.h),
-                  SizedBox(
-                    child: Text(
-                      'Are you sure you want to create this target savings?',
-                      style: MyText.bodySm(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            InkWell(
-                onTap: () {
-                  Navigator.of(context)
-                      .pop(true); // Return true when create is pressed
-                },
-                child: SizedBox(
-                    width: 140.w, child: const OutlineButton(text: 'Cancel'))),
-            InkWell(
-                onTap: () {
-                  Navigator.of(context)
-                      .pop(true); // Return true when create is pressed
-                },
-                child: SizedBox(width: 140.w, child: Button(text: 'Create')))
-          ],
-        );
-      },
-    );
+  void createGoal() {
+    context.read<TargetBloc>().add(CreateTargetEvent(
+        currentAmount: widget.goal.currentAmount,
+        description: widget.goal.description,
+        targetAmount: widget.goal.targetAmount,
+        targetDate: widget.goal.targetDate,
+        title: widget.goal.title,
+        id: widget.goal.id));
+    setState(() {
+      isLoading = true;
+    });
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const LandingScreen(),
+    ));
+    isLoading = false;
+  }
+
+  void success() {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const SuccessScreen(
+        text: 'You have Successfully created your Goal',
+      ),
+    ));
+    context.read<GoalsBloc>().add(GetGoalsEvent());
+    
   }
 }

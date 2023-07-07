@@ -23,14 +23,11 @@ class AppColor {
   static const Color active = Color.fromARGB(255, 62, 44, 221);
 
   //new
-  static const Color dart = Color(0xFF001736);
-    static const Color subtle = Color(0xFFa4c3e9);
-      static const Color white = Color(0xFFffffff);
-        static const Color secondary = Color(0xFFf4ac12);
-          static const Color tertiary = Color(0xFF3dec79);
-            static const Color tint1 = Color(0xFF002a66);
-              static const Color tint2 = Color(0xFF66a5ff);
-
-
-
+  static const Color dart = Color(0xFF002466);
+  static const Color subtle = Color(0xFFa4c3e9);
+  static const Color white = Color(0xFFffffff);
+  static const Color secondary = Color(0xFFf4ac12);
+  static const Color tertiary = Color(0xFF3dec79);
+  static const Color tint1 = Color(0xFF002a66);
+  static const Color tint2 = Color(0xFF66a5ff);
 }

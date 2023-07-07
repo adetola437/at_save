@@ -24,164 +24,178 @@ class SignUpView extends StatelessView<SignUpScreen, SignUpController> {
           child: SafeArea(
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 30.h),
-                  child: SizedBox(
-                    height: 30.h,
-                    width: 30.w,
-                    child: SvgPicture.asset('assets/cancel.svg'),
-                  ),
-                ),
-                Height(60.h),
-                Text(
-                  'Create Account',
-                  style: MyText.heading(color: AppColor.primaryColor),
-                ),
-                Height(10.h),
-                Text(
-                  'Open an account with a few details',
-                  style: MyText.bodySm(),
-                ),
-                Height(50.h),
-                const Head(text: 'Full Name'),
-                Height(10.h),
-                TextFormField(
-                  controller: controller.nameController,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator:
-                      ValidationBuilder().minLength(3).required().build(),
-                  decoration: const InputDecoration(
-                    filled: true,
-                    fillColor: Color.fromARGB(255, 244, 241, 241),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: AppColor.primaryText, width: 0)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: AppColor.primaryText, width: 0)),
-                    //prefixIcon: Image.asset('assets/email.png')
-                  ),
-                ),
-                Height(20.h),
-                const Head(text: 'Phone Number'),
-                Height(10.h),
-                TextFormField(
-                  controller: controller.phoneNumberController,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: ValidationBuilder()
-                      .maxLength(11)
-                      .phone()
-                      .required()
-                      .build(),
-                  decoration: const InputDecoration(
-                    filled: true,
-                    fillColor: Color.fromARGB(255, 244, 241, 241),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: AppColor.primaryText, width: 0)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: AppColor.primaryText, width: 0)),
-                    //prefixIcon: Image.asset('assets/email.png')
-                  ),
-                ),
-                Height(20.h),
-                const Head(text: 'Email'),
-                Height(10.h),
-                TextFormField(
-                  controller: controller.emailController,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: ValidationBuilder()
-                      .email()
-                      .maxLength(50)
-                      .required()
-                      .build(),
-                  decoration: const InputDecoration(
-                    filled: true,
-                    fillColor: Color.fromARGB(255, 244, 241, 241),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: AppColor.primaryText, width: 0)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: AppColor.primaryText, width: 0)),
-                    //prefixIcon: Image.asset('assets/email.png')
-                  ),
-                ),
-                Height(20.h),
-                const Head(text: 'Password'),
-                Height(10.h),
-                TextFormField(
-                  obscureText: controller.obscureText,
-                  controller: controller.passwordController,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator:
-                      ValidationBuilder().required().minLength(6).build(),
-                  decoration: InputDecoration(
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 244, 241, 241),
-                      enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: AppColor.primaryText, width: 0)),
-                      focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: AppColor.primaryText, width: 0)),
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            controller.changeVisibility();
-                          },
-                          icon: controller.obscureText
-                              ? const Icon(Icons.visibility_off)
-                              : const Icon(Icons.visibility))
-                      //prefixIcon: Image.asset('assets/email.png')
-                      ),
-                ),
-                Height(30.h),
-                Center(
-                    child: InkWell(onTap: () {
-                  controller.onSignUp();
-                }, child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                  builder: (context, state) {
-                    return Container(
-                      width: double.maxFinite,
-                      height: 56.h,
-                      decoration: BoxDecoration(
-                          color: AppColor.primaryColor,
-                          borderRadius: BorderRadius.circular(16.r)),
-                      child: Center(
-                        child: state is AuthenticationLoading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                              )
-                            : Text(
-                                'Sign Up',
-                                style: TextStyle(
-                                    fontSize: 16.sp,
-                                    color: Colors.white,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600),
-                              ),
-                      ),
-                    );
-                  },
-                ))),
-                Height(10.h),
-                Row(
-                  children: [
-                    Text(
-                      'Do you already have an account?',
-                      style: MyText.bodySm(color: AppColor.secondaryColor),
+            child: BlocListener<AuthenticationBloc, AuthenticationState>(
+              listener: (context, state) {
+                if (state is SignupSuccess) {
+                  controller.pushLogin();
+                }
+                
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 30.h),
+                    child: SizedBox(
+                      height: 30.h,
+                      width: 30.w,
+                      child: SvgPicture.asset('assets/cancel.svg'),
                     ),
-                    Text(
-                      'Sign in here',
-                      style: MyText.bodySm(color: AppColor.primaryColor),
-                    )
-                  ],
-                )
-              ],
+                  ),
+                  Height(60.h),
+                  Text(
+                    'Create Account',
+                    style: MyText.heading(color: AppColor.primaryColor),
+                  ),
+                  Height(10.h),
+                  Text(
+                    'Open an account with a few details',
+                    style: MyText.bodySm(),
+                  ),
+                  Height(50.h),
+                  const Head(text: 'Full Name'),
+                  Height(10.h),
+                  TextFormField(
+                    controller: controller.nameController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator:
+                        ValidationBuilder().minLength(3).required().build(),
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Color.fromARGB(255, 244, 241, 241),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: AppColor.primaryText, width: 0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: AppColor.primaryText, width: 0)),
+                      //prefixIcon: Image.asset('assets/email.png')
+                    ),
+                  ),
+                  Height(20.h),
+                  const Head(text: 'Phone Number'),
+                  Height(10.h),
+                  TextFormField(
+                    controller: controller.phoneNumberController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: ValidationBuilder()
+                        .maxLength(11)
+                        .phone()
+                        .required()
+                        .build(),
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Color.fromARGB(255, 244, 241, 241),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: AppColor.primaryText, width: 0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: AppColor.primaryText, width: 0)),
+                      //prefixIcon: Image.asset('assets/email.png')
+                    ),
+                  ),
+                  Height(20.h),
+                  const Head(text: 'Email'),
+                  Height(10.h),
+                  TextFormField(
+                    controller: controller.emailController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: ValidationBuilder()
+                        .email()
+                        .maxLength(50)
+                        .required()
+                        .build(),
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Color.fromARGB(255, 244, 241, 241),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: AppColor.primaryText, width: 0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: AppColor.primaryText, width: 0)),
+                      //prefixIcon: Image.asset('assets/email.png')
+                    ),
+                  ),
+                  Height(20.h),
+                  const Head(text: 'Password'),
+                  Height(10.h),
+                  TextFormField(
+                    obscureText: controller.obscureText,
+                    controller: controller.passwordController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator:
+                        ValidationBuilder().required().minLength(6).build(),
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 244, 241, 241),
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: AppColor.primaryText, width: 0)),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: AppColor.primaryText, width: 0)),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              controller.changeVisibility();
+                            },
+                            icon: controller.obscureText
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility))
+                        //prefixIcon: Image.asset('assets/email.png')
+                        ),
+                  ),
+                  Height(30.h),
+                  Center(
+                      child: InkWell(onTap: () {
+                    controller.onSignUp();
+                  }, child:
+                          BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                    builder: (context, state) {
+                      return Container(
+                        width: double.maxFinite,
+                        height: 56.h,
+                        decoration: BoxDecoration(
+                            color: AppColor.primaryColor,
+                            borderRadius: BorderRadius.circular(16.r)),
+                        child: Center(
+                          child: state is AuthenticationLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600),
+                                ),
+                        ),
+                      );
+                    },
+                  ))),
+                  Height(10.h),
+                  Row(
+                    children: [
+                      Text(
+                        'Do you already have an account?',
+                        style: MyText.bodySm(color: AppColor.secondaryColor),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          controller.pushLogin();
+                        },
+                        child: Text(
+                          'Sign in here',
+                          style: MyText.bodySm(color: AppColor.primaryColor),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           )),
         ),

@@ -16,12 +16,12 @@ class HomeController extends State<HomeScreen> {
   CarouselSliderController carouselController = CarouselSliderController();
   int currentIndex = 0;
   List<CarouselWidget> carousel = [
-    const CarouselWidget(
+     CarouselWidget(
       amount: 50000,
       title: 'Total Savings',
       color: AppColor.primaryColor,
     ),
-    const CarouselWidget(
+     CarouselWidget(
       amount: 20000,
       title: 'Expenses',
       color: AppColor.complementaryColor1,

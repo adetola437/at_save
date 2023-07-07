@@ -59,9 +59,7 @@ class OnboardingView
                   )
                 : InkWell(
                     onTap: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const WelcomeScreen(),
-                      ));
+                      controller.pushWelcomeScreen();
                     },
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.w),

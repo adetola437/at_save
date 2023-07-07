@@ -22,13 +22,13 @@ class SavingsAction extends StatelessWidget {
           width: 42.h,
           height: 42.h,
           decoration: BoxDecoration(
-            color: AppColor.shade3.withOpacity(0.1),
+            color: AppColor.primaryColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(50.r),
           ),
           child: Center(
             child: Icon(
               icon,
-              color: AppColor.shade3,
+              color: AppColor.primaryColor,
               size: 20.sp,
             ),
           ),

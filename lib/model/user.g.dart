@@ -32,10 +32,25 @@ const UserSchema = CollectionSchema(
       name: r'phoneNumber',
       type: IsarType.string,
     ),
-    r'uid': PropertySchema(
+    r'savingsBalance': PropertySchema(
       id: 3,
+      name: r'savingsBalance',
+      type: IsarType.double,
+    ),
+    r'totalBalance': PropertySchema(
+      id: 4,
+      name: r'totalBalance',
+      type: IsarType.double,
+    ),
+    r'uid': PropertySchema(
+      id: 5,
       name: r'uid',
       type: IsarType.string,
+    ),
+    r'walletBalance': PropertySchema(
+      id: 6,
+      name: r'walletBalance',
+      type: IsarType.double,
     )
   },
   estimateSize: _userEstimateSize,
@@ -74,7 +89,10 @@ void _userSerialize(
   writer.writeString(offsets[0], object.email);
   writer.writeString(offsets[1], object.name);
   writer.writeString(offsets[2], object.phoneNumber);
-  writer.writeString(offsets[3], object.uid);
+  writer.writeDouble(offsets[3], object.savingsBalance);
+  writer.writeDouble(offsets[4], object.totalBalance);
+  writer.writeString(offsets[5], object.uid);
+  writer.writeDouble(offsets[6], object.walletBalance);
 }
 
 User _userDeserialize(
@@ -88,7 +106,10 @@ User _userDeserialize(
     id: id,
     name: reader.readString(offsets[1]),
     phoneNumber: reader.readString(offsets[2]),
-    uid: reader.readString(offsets[3]),
+    savingsBalance: reader.readDoubleOrNull(offsets[3]),
+    totalBalance: reader.readDoubleOrNull(offsets[4]),
+    uid: reader.readString(offsets[5]),
+    walletBalance: reader.readDoubleOrNull(offsets[6]),
   );
   return object;
 }
@@ -107,7 +128,13 @@ P _userDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 4:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 5:
       return (reader.readString(offset)) as P;
+    case 6:
+      return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -655,6 +682,162 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
     });
   }
 
+  QueryBuilder<User, User, QAfterFilterCondition> savingsBalanceIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'savingsBalance',
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> savingsBalanceIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'savingsBalance',
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> savingsBalanceEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'savingsBalance',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> savingsBalanceGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'savingsBalance',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> savingsBalanceLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'savingsBalance',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> savingsBalanceBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'savingsBalance',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> totalBalanceIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'totalBalance',
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> totalBalanceIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'totalBalance',
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> totalBalanceEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'totalBalance',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> totalBalanceGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'totalBalance',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> totalBalanceLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'totalBalance',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> totalBalanceBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'totalBalance',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<User, User, QAfterFilterCondition> uidEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -782,6 +965,84 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<User, User, QAfterFilterCondition> walletBalanceIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'walletBalance',
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> walletBalanceIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'walletBalance',
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> walletBalanceEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'walletBalance',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> walletBalanceGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'walletBalance',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> walletBalanceLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'walletBalance',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> walletBalanceBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'walletBalance',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
 }
 
 extension UserQueryObject on QueryBuilder<User, User, QFilterCondition> {}
@@ -825,6 +1086,30 @@ extension UserQuerySortBy on QueryBuilder<User, User, QSortBy> {
     });
   }
 
+  QueryBuilder<User, User, QAfterSortBy> sortBySavingsBalance() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'savingsBalance', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> sortBySavingsBalanceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'savingsBalance', Sort.desc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> sortByTotalBalance() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalBalance', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> sortByTotalBalanceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalBalance', Sort.desc);
+    });
+  }
+
   QueryBuilder<User, User, QAfterSortBy> sortByUid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uid', Sort.asc);
@@ -834,6 +1119,18 @@ extension UserQuerySortBy on QueryBuilder<User, User, QSortBy> {
   QueryBuilder<User, User, QAfterSortBy> sortByUidDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uid', Sort.desc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> sortByWalletBalance() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'walletBalance', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> sortByWalletBalanceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'walletBalance', Sort.desc);
     });
   }
 }
@@ -887,6 +1184,30 @@ extension UserQuerySortThenBy on QueryBuilder<User, User, QSortThenBy> {
     });
   }
 
+  QueryBuilder<User, User, QAfterSortBy> thenBySavingsBalance() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'savingsBalance', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> thenBySavingsBalanceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'savingsBalance', Sort.desc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> thenByTotalBalance() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalBalance', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> thenByTotalBalanceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalBalance', Sort.desc);
+    });
+  }
+
   QueryBuilder<User, User, QAfterSortBy> thenByUid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uid', Sort.asc);
@@ -896,6 +1217,18 @@ extension UserQuerySortThenBy on QueryBuilder<User, User, QSortThenBy> {
   QueryBuilder<User, User, QAfterSortBy> thenByUidDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uid', Sort.desc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> thenByWalletBalance() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'walletBalance', Sort.asc);
+    });
+  }
+
+  QueryBuilder<User, User, QAfterSortBy> thenByWalletBalanceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'walletBalance', Sort.desc);
     });
   }
 }
@@ -922,10 +1255,28 @@ extension UserQueryWhereDistinct on QueryBuilder<User, User, QDistinct> {
     });
   }
 
+  QueryBuilder<User, User, QDistinct> distinctBySavingsBalance() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'savingsBalance');
+    });
+  }
+
+  QueryBuilder<User, User, QDistinct> distinctByTotalBalance() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'totalBalance');
+    });
+  }
+
   QueryBuilder<User, User, QDistinct> distinctByUid(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'uid', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<User, User, QDistinct> distinctByWalletBalance() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'walletBalance');
     });
   }
 }
@@ -955,9 +1306,27 @@ extension UserQueryProperty on QueryBuilder<User, User, QQueryProperty> {
     });
   }
 
+  QueryBuilder<User, double?, QQueryOperations> savingsBalanceProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'savingsBalance');
+    });
+  }
+
+  QueryBuilder<User, double?, QQueryOperations> totalBalanceProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'totalBalance');
+    });
+  }
+
   QueryBuilder<User, String, QQueryOperations> uidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'uid');
+    });
+  }
+
+  QueryBuilder<User, double?, QQueryOperations> walletBalanceProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'walletBalance');
     });
   }
 }

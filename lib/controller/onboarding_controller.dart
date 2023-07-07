@@ -1,3 +1,4 @@
+import 'package:at_save/controller/welcome_controller.dart';
 import 'package:at_save/view/screens/onboarding_view.dart';
 import 'package:flutter/material.dart';
 
@@ -74,5 +75,11 @@ class OnboardingController extends State<OnboardingScreen> {
 
       lastPage = value == 2;
     });
+  }
+
+  pushWelcomeScreen() {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const WelcomeScreen(),
+    ));
   }
 }

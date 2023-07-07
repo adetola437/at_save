@@ -1,3 +1,4 @@
+import 'package:at_save/controller/sign_in_controller.dart';
 import 'package:at_save/view/screens/sign_up_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,5 +50,11 @@ class SignUpController extends State<SignUpScreen> {
           phoneNumber: phoneNumberController.text,
           password: passwordController.text));
     }
+  }
+
+  void pushLogin() {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const SignInScreen(),
+    ));
   }
 }

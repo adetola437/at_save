@@ -27,6 +27,27 @@ class LocalDatabase {
         // name: currentUser.toString(),
         directory: (await getApplicationSupportDirectory()).path);
   }
+  Future<User?> fetchUser() async {
+    return _isar!.writeTxn(() async {
+      return _isar!.users.where().findFirst();
+    });
+  }
 
+    Future populateUser(User user) async {
+    return _isar!.writeTxn(() async {
+      await _isar!.users.clear();
+
+      return _isar!.users.put(user);
+    });
+  }
+
+
+    Future populateGoals(List<SavingsGoal> goals) async {
+    return _isar!.writeTxn(() async {
+      await _isar!.savingsGoals.clear();
+
+      return _isar!.savingsGoals.putAll(goals);
+    });
+  }
 
 }
