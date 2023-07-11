@@ -1,11 +1,12 @@
 import 'package:at_save/bloc/goals/goals_bloc.dart';
-import 'package:at_save/bloc/user/user_bloc.dart';
-import 'package:at_save/controller/landing_controller.dart';
+import 'package:at_save/controller/error_controller.dart';
 import 'package:at_save/controller/success_controller.dart';
 import 'package:at_save/model/savings_goal.dart';
 import 'package:at_save/view/screens/summary_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 import '../bloc/target/target_bloc.dart';
 
@@ -32,6 +33,12 @@ class SummaryController extends State<SummaryScreen> {
   Widget build(BuildContext context) => SummaryView(this);
   bool isLoading = false;
 
+  loading() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
   void createGoal() {
     context.read<TargetBloc>().add(CreateTargetEvent(
         currentAmount: widget.goal.currentAmount,
@@ -40,22 +47,45 @@ class SummaryController extends State<SummaryScreen> {
         targetDate: widget.goal.targetDate,
         title: widget.goal.title,
         id: widget.goal.id));
-    setState(() {
-      isLoading = true;
-    });
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const LandingScreen(),
-    ));
-    isLoading = false;
+
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const LandingScreen(),
+    // ));
   }
 
-  void success() {
+  Future success() async {
+    context.read<GoalsBloc>().add(GetGoalsEvent());
+    isLoading = false;
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => const SuccessScreen(
         text: 'You have Successfully created your Goal',
       ),
     ));
-    context.read<GoalsBloc>().add(GetGoalsEvent());
-    
   }
+
+  void error() {
+    setState(() {
+      isLoading = false;
+    });
+    Fluttertoast.showToast(msg: 'Error Creating your Target');
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+      return  ErrorScreen();
+    }));
+  }
+
+  String formatDateToString(DateTime dateTime) {
+    DateFormat dateFormat = DateFormat("dd MMMM yyyy");
+    return dateFormat.format(dateTime);
+  }
+
+  //  Future error()async {
+  //  context.read<GoalsBloc>().add(GetGoalsEvent());
+  //   isLoading = false;
+  //   Navigator.of(context).pushReplacement(MaterialPageRoute(
+  //     builder: (context) => const SuccessScreen(
+  //       text: 'You have Successfully created your Goal',
+  //     ),
+  //   ));
+
+  // }
 }

@@ -79,10 +79,10 @@ class SavingsView extends StatelessView<SavingsScreen, SavingsController> {
                         isScrollable: true,
                         tabs: const [
                           Tab(
-                            text: 'All',
+                            text: 'Active',
                           ),
                           Tab(
-                            text: 'Active',
+                            text: 'Terminated',
                           ),
                           Tab(
                             text: 'Completed',
@@ -101,18 +101,39 @@ class SavingsView extends StatelessView<SavingsScreen, SavingsController> {
                     builder: (context, state) {
                       if (state is GoalsLoaded) {
                         List<SavingsGoal> goals = state.goals;
+                        List<SavingsGoal> activeGoals = state.goals
+                            .where((element) => element.status == 'Active')
+                            .toList();
+                        List<SavingsGoal> terminatedGoals = state.goals
+                            .where((element) => element.status == 'Terminated')
+                            .toList();
+                        List<SavingsGoal> completedGoals = state.goals
+                            .where((element) => element.status == 'Completed')
+                            .toList();
                         return TabBarView(
                             controller: controller.tabController,
                             children: [
                               ListView.builder(
-                                  itemCount: goals.length,
+                                  itemCount: activeGoals.length,
                                   itemBuilder: (ctx, index) {
                                     return SavingsWidget(
-                                      goal: goals[index],
+                                      goal: activeGoals[index],
                                     );
                                   }),
-                              const Text('Active'),
-                              const Text('Completed')
+                              ListView.builder(
+                                  itemCount: terminatedGoals.length,
+                                  itemBuilder: (ctx, index) {
+                                    return SavingsWidget(
+                                      goal: terminatedGoals[index],
+                                    );
+                                  }),
+                              ListView.builder(
+                                  itemCount: completedGoals.length,
+                                  itemBuilder: (ctx, index) {
+                                    return SavingsWidget(
+                                      goal: completedGoals[index],
+                                    );
+                                  })
                             ]);
                       }
                       return Container();

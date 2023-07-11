@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:at_save/model/savings_goal.dart';
 import 'package:at_save/repository.dart';
 import 'package:bloc/bloc.dart';
@@ -18,6 +16,7 @@ class TargetBloc extends Bloc<TargetEvent, TargetState> {
 }
 
 _createTarget(CreateTargetEvent event, emit) async {
+  emit(TargetLoading());
   Repository repo = Repository();
   try {
     SavingsGoal goal = SavingsGoal(
@@ -28,8 +27,11 @@ _createTarget(CreateTargetEvent event, emit) async {
         targetAmount: event.targetAmount,
         targetDate: event.targetDate,
         description: event.description);
-    repo.createGoal(goal);
+    await repo.createGoal(goal);
+    emit(TargetError());
+    // emit(TargetLoaded());
   } catch (e) {
+    emit(TargetError());
     print(e);
   }
 }

@@ -19,3 +19,7 @@ class GoalsLoaded extends GoalsState {
   List<Object> get props => [];
 }
 class GoalsLoadingError extends GoalsState {}
+class GoalDeleted extends GoalsState{}
+class GoalEdited extends GoalsState{}
+class GoalBroken extends GoalsState{}
+class GoalTopUp extends GoalsState{}

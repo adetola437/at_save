@@ -5,6 +5,8 @@ abstract class UserState extends Equatable {
 
   @override
   List<Object> get props => [];
+  double? get getTotalBalance => null;
+   double? get getExpenses => null;
 }
 
 class UserInitial extends UserState {}
@@ -21,4 +23,9 @@ class UserSuccess extends UserState {
   });
   @override
   List<Object> get props => [user];
+
+   @override
+  double get getTotalBalance => user.savingsBalance! + user.walletBalance!;
+
+   
 }

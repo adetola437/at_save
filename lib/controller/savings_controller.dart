@@ -1,3 +1,7 @@
+import 'package:at_save/bloc/budget/budget_bloc.dart';
+import 'package:at_save/bloc/expense_transaction/expense_transaction_bloc.dart';
+import 'package:at_save/bloc/goals/goals_bloc.dart';
+import 'package:at_save/bloc/savings_transaction/savings_transactions_bloc.dart';
 import 'package:at_save/bloc/user/user_bloc.dart';
 import 'package:at_save/view/screens/savings_view.dart';
 import 'package:flutter/material.dart';
@@ -20,14 +24,14 @@ class SavingsController extends State<SavingsScreen>
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) => SavingsView(this);
 
   Future onRefresh() async {
     context.read<UserBloc>().add(FetchUserEvent());
+    context.read<GoalsBloc>().add(GetGoalsEvent());
+
+    context.read<SavingsTransactionsBloc>().add(FetchSavingsTransactions());
+    context.read<BudgetBloc>().add(FetchBudgetEvent());
+    context.read<ExpenseTransactionBloc>().add(FetchExpenseTransaction());
   }
 }

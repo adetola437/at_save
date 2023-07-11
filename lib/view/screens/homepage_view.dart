@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../Database/remote_database.dart';
 import '../../bloc/user/user_bloc.dart';
 import '../../boiler_plate/stateless_view.dart';
 
@@ -104,10 +105,20 @@ class HomePageView extends StatelessView<HomeScreen, HomeController> {
               Height(20.h),
               Row(
                 children: [
-                  const Transaction(
-                    color: AppColor.shade4,
-                    image: 'assets/add.png',
-                    text: 'Add money',
+                  InkWell(
+                    onTap: () {
+                      print('ppp');
+                      RemoteDatabase remoteDatabase = RemoteDatabase();
+                      remoteDatabase.sendPushNotification(
+                          'eaiLQvQyTAOS1YlxfWGeUV:APA91bEsE_aXRheVjLI0Oa6X8i5gNsQL25FzRkO38ZtXFuevCgZK1ZzljrRya_0SLorC20Wy2Pbr-zIufYGFC1s-rlvBUrIdMx0QG6X8xvn2Nq8L7P4F3fR89WgBmtKQAdv3i5SxJ3hP',
+                          'Credit',
+                          'You have Successfully Received  from ');
+                    },
+                    child: const Transaction(
+                      color: AppColor.shade4,
+                      image: 'assets/add.png',
+                      text: 'Add money',
+                    ),
                   ),
                   Width(20.w),
                   const Transaction(

@@ -1,3 +1,4 @@
+import 'package:at_save/price_format.dart';
 import 'package:isar/isar.dart';
 
 part 'savings_goal.g.dart';
@@ -15,7 +16,7 @@ class SavingsGoal {
   double currentAmount;
 
   SavingsGoal({
-    this.status='Active',
+    this.status = 'Active',
     required this.createdDate,
     this.myId,
     required this.id,
@@ -35,7 +36,7 @@ class SavingsGoal {
       targetAmount: json['target_amount'] != null
           ? json['target_amount'].toDouble()
           : null,
-      targetDate: DateTime.parse(json['target_date']),
+      targetDate: PriceFormatter.parseDateString(json['target_date']),
       description: json['description'],
       currentAmount: json['current_amount'] != null
           ? json['current_amount'].toDouble()
@@ -49,7 +50,7 @@ class SavingsGoal {
       'id': id,
       'title': title,
       'target_amount': targetAmount,
-      'target_date': targetDate.toIso8601String(),
+      'target_date': PriceFormatter.formatDateToString(targetDate),
       'description': description,
       'current_amount': currentAmount,
       'created_date': createdDate.toIso8601String()

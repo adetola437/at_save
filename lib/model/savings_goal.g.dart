@@ -113,7 +113,7 @@ SavingsGoal _savingsGoalDeserialize(
     description: reader.readString(offsets[2]),
     id: reader.readString(offsets[3]),
     myId: id,
-    status: reader.readStringOrNull(offsets[4]) ?? 'active',
+    status: reader.readStringOrNull(offsets[4]) ?? 'Active',
     targetAmount: reader.readDouble(offsets[5]),
     targetDate: reader.readDateTime(offsets[6]),
     title: reader.readString(offsets[7]),
@@ -137,7 +137,7 @@ P _savingsGoalDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readStringOrNull(offset) ?? 'active') as P;
+      return (reader.readStringOrNull(offset) ?? 'Active') as P;
     case 5:
       return (reader.readDouble(offset)) as P;
     case 6:

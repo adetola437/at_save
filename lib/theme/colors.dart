@@ -30,4 +30,5 @@ class AppColor {
   static const Color tertiary = Color(0xFF3dec79);
   static const Color tint1 = Color(0xFF002a66);
   static const Color tint2 = Color(0xFF66a5ff);
+  static const Color ground = Color(0x00102c56);
 }

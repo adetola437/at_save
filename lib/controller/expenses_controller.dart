@@ -1,8 +1,15 @@
+import 'dart:math';
+
+import 'package:at_save/bloc/budget/budget_bloc.dart';
 import 'package:at_save/theme/colors.dart';
 import 'package:at_save/theme/text.dart';
 import 'package:at_save/view/screens/expenses_view.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../model/budget.dart';
+import '../model/expense.dart';
 
 class ExpensesScreen extends StatefulWidget {
   const ExpensesScreen({super.key});
@@ -12,40 +19,114 @@ class ExpensesScreen extends StatefulWidget {
 }
 
 class ExpensesController extends State<ExpensesScreen> {
-  List<PieChartSectionData> getSections() {
-    const List<Color> colors = [
-      AppColor.tint2,
-      Colors.green,
-      Colors.blue,
-      Colors.yellow,
-      Colors.orange,
-    ];
-    const List<String> categories = [
-      'Food',
-      'Entertainment',
-      'Grocery',
-      'Shopping',
-      'Miscellenous'
-    ];
-    const List<double> percentages = [20, 15, 35, 10, 20];
+  TextEditingController nameController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
 
-    return List.generate(5, (index) {
-      final isTouched = index == touchedIndex;
-      final double fontSize = isTouched ? 18 : 12;
-      final double radius = isTouched ? 60 : 50;
+  bool isLoading = false;
+  // List<PieChartSectionData> getSections() {
+  //   const List<Color> colors = [
+  //     AppColor.tint2,
+  //     Colors.green,
+  //     Colors.blue,
+  //     Colors.yellow,
+  //     Colors.orange,
+  //   ];
+  //   const List<String> categories = [
+  //     'Food',
+  //     'Entertainment',
+  //     'Grocery',
+  //     'Shopping',
+  //     'Miscellenous'
+  //   ];
+  //   const List<double> percentages = [20, 15, 35, 10, 20];
 
-      return PieChartSectionData(
-        color: colors[index],
-        value: percentages[index],
-        title: '${percentages[index].toString()}%',
-        radius: radius,
-        titleStyle: MyText.mobileMd(color: AppColor.dart),
-        titlePositionPercentageOffset: 0.55,
-        borderSide: isTouched
-            ? const BorderSide(color: Colors.white, width: 4)
-            : BorderSide.none,
+  //   return List.generate(5, (index) {
+  //     final isTouched = index == touchedIndex;
+  //     final double fontSize = isTouched ? 18 : 12;
+  //     final double radius = isTouched ? 60 : 50;
+
+  //     return PieChartSectionData(
+  //       color: colors[index],
+  //       value: percentages[index],
+  //       title: '${percentages[index].toString()}%',
+  //       radius: radius,
+  //       titleStyle: MyText.mobileMd(color: AppColor.dart),
+  //       titlePositionPercentageOffset: 0.55,
+  //       borderSide: isTouched
+  //           ? const BorderSide(color: Colors.white, width: 4)
+  //           : BorderSide.none,
+  //     );
+  //   });
+  // }
+
+  // List<PieChartSectionData> getSections(List<Budget> budgets) {
+  //   return budgets.map((budget) {
+  //     //const isTouched = false; // Replace this with your own logic
+  //     const double fontSize = 12;
+  //     const double radius = 50;
+
+  //     return PieChartSectionData(
+  //       color: getColor(budget.color),
+  //       value: 20,
+  //       title:
+  //           '${((budget.currentAmount ?? 0) / budget.amount * 100).toStringAsFixed(2)}%',
+  //       radius: radius,
+  //       titleStyle: MyText.mobileMd(color: AppColor.dart),
+  //       titlePositionPercentageOffset: 0.55,
+  //       borderSide: BorderSide.none,
+  //     );
+  //   }).toList();
+  // }
+
+  ///Pie chart data
+  List<PieChartSectionData> getSections(List<Budget> budgets) {
+    List<PieChartSectionData> sections = [];
+
+    // Calculate the total amount of all budgets
+    double totalAmount =
+        budgets.fold(0.0, (sum, budget) => sum + budget.currentAmount!);
+
+    // Check if there are no budgets or total amount is zero
+    if (budgets.isEmpty || totalAmount == 0) {
+      // Add a default section with no data
+      sections.add(
+        PieChartSectionData(
+          color: Colors.grey,
+          value: 100,
+          title: 'No Data',
+          radius: 50,
+          titleStyle: MyText.mobileMd(color: AppColor.dart),
+          titlePositionPercentageOffset: 0.55,
+          borderSide: BorderSide.none,
+        ),
       );
-    });
+
+      return sections;
+    }
+
+    // Calculate the percentage for each budget category
+    for (int i = 0; i < budgets.length; i++) {
+      Budget budget = budgets[i];
+      double percentage = (budget.currentAmount! / totalAmount) * 100;
+
+      //final isTouched = i == touchedIndex;
+      const double fontSize = 12;
+      const double radius = 50;
+
+      sections.add(
+        PieChartSectionData(
+          color: getColor(budget.color),
+          value: percentage,
+          title: '${percentage.toStringAsFixed(2)}%',
+          radius: radius,
+          titleStyle: MyText.mobileMd(color: AppColor.dart),
+          titlePositionPercentageOffset: 0.55,
+          borderSide: BorderSide.none,
+        ),
+      );
+    }
+
+    return sections;
   }
 
   int touchedIndex = -1;
@@ -63,57 +144,133 @@ class ExpensesController extends State<ExpensesScreen> {
   @override
   Widget build(BuildContext context) => ExpensesView(this);
 
-  void touch(FlTouchEvent event, PieTouchResponse pieTouchResponse) {
+  // void touch(FlTouchEvent event, PieTouchResponse pieTouchResponse) {
+  //   setState(() {
+  //     if (pieTouchResponse.touchedSection == null) {
+  //       touchedIndex = -1;
+  //     } else {
+  //       touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+  //     }
+  //   });
+  // }
+
+  void createBudget() async {
+    context.read<BudgetBloc>().add(CreateBudgetEvent(
+        budgetAmount: double.parse(amountController.text),
+        budgetName: nameController.text,
+        color: getColorValue(generateRandomColor())));
+  }
+
+  loading() {
     setState(() {
-      if (pieTouchResponse.touchedSection == null) {
-        touchedIndex = -1;
-      } else {
-        touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
-      }
+      isLoading = true;
     });
   }
 
-  List<Widget> buildColorIndicators() {
-    // Replace this with your actual data structure for categories and percentages
-    List<Map<String, dynamic>> categoryData = [
-      {"color": AppColor.tint2, "percentage": 20.0, 'category': 'Food'},
-      {"color": Colors.green, "percentage": 15.0, 'category': 'Entertainment'},
-      {"color": Colors.blue, "percentage": 35.0, 'category': 'Grocery'},
-      {"color": Colors.yellow, "percentage": 10.0, 'category': 'Shopping'},
-      {"color": Colors.orange, "percentage": 20.0, 'category': 'Miscellenous'},
-    ];
-
+  List<Widget> buildColorIndicators(List<Budget> budgets) {
     List<Widget> indicators = [];
 
-    for (int i = 0; i < categoryData.length; i++) {
-      Color color = categoryData[i]["color"];
-      String percentage = categoryData[i]["category"];
-
-      Widget indicator = Padding(
+    // Check if there are no budgets
+    if (budgets.isEmpty) {
+      // Add a default indicator for no budgets
+      Widget noBudgetIndicator = Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 16,
-              height: 16,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: color,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              percentage,
-              style: MyText.mobileMd(color: AppColor.dart),
-            ),
-          ],
+        child: Text(
+          'No Budgets',
+          style: MyText.mobileMd(color: AppColor.dart),
         ),
       );
 
-      indicators.add(indicator);
+      indicators.add(noBudgetIndicator);
+      return indicators;
+    }
+
+    for (int i = 0; i < budgets.length; i++) {
+      Budget budget = budgets[i];
+      Color myColor = getColor(budget.color);
+      Color color = myColor;
+      String percentage = budget.name;
+
+      // Check if budget has no amount
+      if (budget.currentAmount == null || budget.currentAmount == 0) {
+        // Add a default indicator for budgets with no amount
+        Widget noAmountIndicator = Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 16,
+                height: 16,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withOpacity(0.5),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                percentage,
+                style: MyText.mobileMd(color: AppColor.dart),
+              ),
+            ],
+          ),
+        );
+
+        indicators.add(noAmountIndicator);
+      } else {
+        // Add indicator for budgets with amount
+        Widget indicator = Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 16,
+                height: 16,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                percentage,
+                style: MyText.mobileMd(color: AppColor.dart),
+              ),
+            ],
+          ),
+        );
+
+        indicators.add(indicator);
+      }
     }
 
     return indicators;
+  }
+
+  Color generateRandomColor() {
+    final random = Random();
+    return Color.fromARGB(
+      255,
+      random.nextInt(256),
+      random.nextInt(256),
+      random.nextInt(256),
+    );
+  }
+
+  int getColorValue(Color color) {
+    return color.value;
+  }
+
+  Color getColor(int colorValue) {
+    return Color(colorValue);
+  }
+
+  double getTotalExpenses(List<Expense> expenses) {
+    double totalExpenses = 0;
+    for (Expense expense in expenses) {
+      totalExpenses += expense.amount;
+    }
+    return totalExpenses;
   }
 }

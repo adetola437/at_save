@@ -1,3 +1,5 @@
+import 'package:at_save/bloc/expense_transaction/expense_transaction_bloc.dart';
+import 'package:at_save/bloc/savings_transaction/savings_transactions_bloc.dart';
 import 'package:at_save/controller/landing_controller.dart';
 import 'package:at_save/controller/sign_up_controller.dart';
 import 'package:at_save/view/screens/sign_in_view.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/autthentication/authentication_bloc.dart';
+import '../bloc/budget/budget_bloc.dart';
 import '../bloc/goals/goals_bloc.dart';
 import '../bloc/user/user_bloc.dart';
 
@@ -76,5 +79,8 @@ class SignInController extends State<SignInScreen> {
   void getUserDetails() {
     context.read<UserBloc>().add(FetchUserEvent());
     context.read<GoalsBloc>().add(GetGoalsEvent());
+    context.read<SavingsTransactionsBloc>().add(FetchSavingsTransactions());
+    context.read<BudgetBloc>().add(FetchBudgetEvent());
+    context.read<ExpenseTransactionBloc>().add(FetchExpenseTransaction());
   }
 }

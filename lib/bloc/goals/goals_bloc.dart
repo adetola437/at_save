@@ -18,6 +18,63 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
     on<AddMoneyToSavingsEvent>(
       (event, emit) => _addMoney(event, emit),
     );
+
+    on<BreakSavingsEvent>(
+      (event, emit) => _breakSavings(event, emit),
+    );
+
+    on<DeleteEvent>(
+      (event, emit) => _deleteGoal(event, emit),
+    );
+
+    on<UpdateGoalEvent>(
+      (event, emit) => _updateGoal(event, emit),
+    );
+  }
+
+  _updateGoal(UpdateGoalEvent event, emit) async {
+    emit(GoalsLoading());
+    Repository repo = Repository();
+    try {
+      repo.updateSavingsGoal(event.golaId, event.description, event.goalName,
+          event.targetAmount, event.date);
+      emit(GoalEdited());
+
+      // List<SavingsGoal> localGoals = await repo.getGoals();
+
+      // final List<SavingsGoal> remoteGoals = await repo.getGoals();
+
+      // if (localGoals != remoteGoals) {
+      //   await repo.populateGoals(remoteGoals);
+      // }
+      // localGoals = await repo.getGoals();
+
+      // emit(GoalsLoaded(goals: localGoals));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _breakSavings(BreakSavingsEvent event, emit) async {
+    emit(GoalsLoading());
+    Repository repo = Repository();
+    try {
+      repo.breakSavings(event.id, event.amount);
+      emit(GoalBroken());
+      // List<SavingsGoal> localGoals = await repo.getGoals();
+
+      // final List<SavingsGoal> remoteGoals = await repo.getGoals();
+
+      // if (localGoals != remoteGoals) {
+      //   await repo.populateGoals(remoteGoals);
+      // }
+      // localGoals = await repo.getGoals();
+
+      // emit(GoalsLoaded(goals: localGoals));
+    } catch (e) {
+      emit(GoalsLoadingError());
+      print(e);
+    }
   }
 
   _addMoney(AddMoneyToSavingsEvent event, emit) async {
@@ -29,16 +86,17 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
         print(event.id);
       } else {
         await repo.addToSavings(event.id, event.amount);
-        List<SavingsGoal> localGoals = await repo.getGoals();
+        emit(GoalTopUp());
+        // List<SavingsGoal> localGoals = await repo.getGoals();
 
-        final List<SavingsGoal> remoteGoals = await repo.getGoals();
+        // final List<SavingsGoal> remoteGoals = await repo.getGoals();
 
-        if (localGoals != remoteGoals) {
-          await repo.populateGoals(remoteGoals);
-        }
-        localGoals = await repo.getGoals();
+        // if (localGoals != remoteGoals) {
+        //   await repo.populateGoals(remoteGoals);
+        // }
+        // localGoals = await repo.getGoals();
 
-        emit(GoalsLoaded(goals: localGoals));
+        // emit(GoalsLoaded(goals: localGoals));
       }
     } catch (e) {
       print(e);
@@ -60,6 +118,28 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
 
       emit(GoalsLoaded(goals: localGoals));
     } on Exception {
+      emit(GoalsLoadingError());
+    }
+  }
+
+  _deleteGoal(DeleteEvent event, emit) async {
+    emit(GoalsLoading());
+    print('deleting');
+    try {
+      Repository repo = Repository();
+      await repo.deleteGoal(event.id, event.amount);
+      List<SavingsGoal> localGoals = await repo.getGoals();
+
+      final List<SavingsGoal> remoteGoals = await repo.getGoals();
+
+      if (localGoals != remoteGoals) {
+        await repo.populateGoals(remoteGoals);
+      }
+      localGoals = await repo.getGoals();
+      emit(GoalDeleted());
+
+      // emit(GoalsLoaded(goals: localGoals));
+    } catch (e) {
       emit(GoalsLoadingError());
     }
   }

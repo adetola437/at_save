@@ -10,3 +10,4 @@ abstract class TargetState extends Equatable {
 class TargetInitial extends TargetState {}
 class TargetLoading extends TargetState {}
 class TargetLoaded extends TargetState {}
+class TargetError extends TargetState {}

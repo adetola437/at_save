@@ -149,6 +149,14 @@ class MyText {
       fontWeight: FontWeight.w400,
     );
   }
+    static TextStyle underline({Color? color}) {
+    return GoogleFonts.inter(
+      decoration: TextDecoration.underline,
+      color: color,
+      fontSize: 15.sp,
+      fontWeight: FontWeight.w400,
+    );
+  }
 
   static TextStyle heading({Color? color}) {
     return GoogleFonts.karla(

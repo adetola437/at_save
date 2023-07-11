@@ -69,7 +69,7 @@ class SavingsWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10.r)),
                         child: Center(
                           child: Text(
-                            'Active',
+                            goal.status,
                             style: MyText.mobileSm(color: borderColor),
                           ),
                         ),

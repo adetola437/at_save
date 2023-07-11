@@ -2,11 +2,11 @@ part of 'authentication_bloc.dart';
 
 @immutable
 abstract class AuthenticationState {}
-
+///Initial state of the bloc
 class AuthenticationInitial extends AuthenticationState {}
-
-class AuthenticationLoading extends AuthenticationState {}
-
+/// When the user is authenticating, this state is trigered, majorly for loading state
+class AuthenticationLoading extends AuthenticationState {}  
+///This state is trigered when the user has been successfully authenticated
 class AuthenticationSuccess extends AuthenticationState {
   final String uid;
 
@@ -15,7 +15,7 @@ class AuthenticationSuccess extends AuthenticationState {
   @override
   List<Object> get props => [uid];
 }
-
+///When there is an error in the authentication, the Authentication state is emitted.
 class AuthenticationError extends AuthenticationState {
   final String error;
 
@@ -24,7 +24,7 @@ class AuthenticationError extends AuthenticationState {
   @override
   List<Object> get props => [error];
 }
-
+///When a user gets an error while trying to signup, SignUpError state is emitted.
 class SignupError extends AuthenticationState {
   final String error;
 
@@ -33,7 +33,7 @@ class SignupError extends AuthenticationState {
   @override
   List<Object> get props => [error];
 }
-
+///When a user has successfully signed up, the signupseccess state is trigered.
 class SignupSuccess extends AuthenticationState {
   final String uid;
 

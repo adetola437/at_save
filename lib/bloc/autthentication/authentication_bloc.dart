@@ -10,22 +10,24 @@ import '../../shared_preferences/session_manager.dart';
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
+
+/// Authentication bloc is used to handle firebase sign in and sign up of the user
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc() : super(AuthenticationInitial()) {
     on<AuthenticationEvent>((event, emit) {
       // TODO: implement event handler
     });
-    on<EmailSignUpEvent>((event, emit) => _emailSignUp(event, emit));
+    on<EmailSignUpEvent>((event, emit) => _emailSignUp(event, emit)); //Action on user signup
     on<EmailSignInEvent>(
-      (event, emit) => _emailSignIn(event, emit),
+      (event, emit) => _emailSignIn(event, emit),  //Action on user sign in
     );
   }
 }
-
+///Method used to implement user sign up
 _emailSignUp(EmailSignUpEvent event, emit) async {
   SessionManager manager = SessionManager();
-  String? token = await manager.getMessagingToken();
+  String? token = await manager.getMessagingToken();  //Getting the uid of the logged in user
 
   emit(AuthenticationLoading());
   try {
@@ -59,7 +61,7 @@ _emailSignUp(EmailSignUpEvent event, emit) async {
     emit(SignupError(error: e.message!));
   }
 }
-
+///Method used to implement user Sign In
 _emailSignIn(EmailSignInEvent event, emit) async {
   print('Signin');
   emit(AuthenticationLoading());

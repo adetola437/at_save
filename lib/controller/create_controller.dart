@@ -1,8 +1,6 @@
-import 'package:at_save/bloc/goals/goals_bloc.dart';
 import 'package:at_save/controller/summary_controller.dart';
 import 'package:at_save/view/screens/create_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +14,8 @@ class CreateScreen extends StatefulWidget {
 }
 
 class CreateController extends State<CreateScreen> {
+
+  //Initializing
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController targetController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -24,12 +24,13 @@ class CreateController extends State<CreateScreen> {
   TextEditingController savedController = TextEditingController();
   @override
   void initState() {
-    
     super.initState();
   }
 
   @override
   void dispose() {
+    //Disposing controllers
+    
     targetController.dispose();
     descriptionController.dispose();
     nameController.dispose();
@@ -40,21 +41,22 @@ class CreateController extends State<CreateScreen> {
 
   @override
   Widget build(BuildContext context) => CreateView(this);
-  static String _formatDateString(String dateString) {
+
+  ///This method is used to format the dateTime selected when using the showdate picker.
+  String _formatDateString(String dateString) {
     DateTime dateTime =
         DateTime.parse(dateString); // Parse input string into DateTime object
     DateFormat dayFormat = DateFormat('dd'); // Format for day (e.g. 05)
-    DateFormat monthFormat = DateFormat.MMMM(); // Format for month (e.g. april)
-    DateFormat weekdayFormat =
-        DateFormat.EEEE(); // Format for weekday (e.g. tuesday)
+    DateFormat monthFormat = DateFormat.MMMM(); // Format for month (e.g. April)
+    DateFormat yearFormat = DateFormat.y(); // Format for year (e.g. 2023)
 
     String formattedDay = dayFormat.format(dateTime);
     String formattedMonth = monthFormat.format(dateTime);
-    String formattedWeekday = weekdayFormat.format(dateTime);
+    String formattedYear = yearFormat.format(dateTime);
 
-    return '$formattedDay $formattedMonth, $formattedWeekday';
+    return '$formattedDay $formattedMonth, $formattedYear';
   }
-
+///This is the method that displays the callender widget for the user to select
   Future<void> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -68,28 +70,35 @@ class CreateController extends State<CreateScreen> {
       });
     }
   }
-
+///This actions is called when a user has inputed all of his savings details for preview.
   void goToSummary() {
-    if (double.parse(savedController.text) >
-        double.parse(targetController.text)) {
-      Fluttertoast.showToast(
-        msg: 'You cannot save more than your target',
-      );
-    } else {
-      if (formKey.currentState!.validate()) {
-        var goal = SavingsGoal(
+    late SavingsGoal goal;
+    if (formKey.currentState!.validate()) {
+      if (double.parse(savedController.text) >
+          double.parse(targetController.text)) {
+        Fluttertoast.showToast(
+          msg: 'You cannot save more than your target',
+        );
+      } else {
+        goal = SavingsGoal(
             createdDate: DateTime.now(),
             id: '',
             currentAmount: double.parse(savedController.text),
             title: nameController.text,
             targetAmount: double.parse(targetController.text),
-            targetDate: DateTime.now(),
+            targetDate: parseDateString(dateController.text),
             description: descriptionController.text);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) {
-          return SummaryScreen(goal: goal);
-        }));
       }
+//pushes the summary screen
+      Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) {
+        return SummaryScreen(goal: goal);
+      }));
     }
+  }
+///Format method used to edit datetime
+  DateTime parseDateString(String dateString) {
+    DateFormat dateFormat = DateFormat("dd MMMM, yyyy");
+    return dateFormat.parse(dateString);
   }
 }

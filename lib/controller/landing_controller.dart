@@ -1,3 +1,4 @@
+import 'package:at_save/Database/remote_database.dart';
 import 'package:at_save/view/screens/landing_view.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class LandingScreen extends StatefulWidget {
 }
 
 class LandingController extends State<LandingScreen> {
-   var selectedIndex = 0;
+  var selectedIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -28,4 +29,5 @@ class LandingController extends State<LandingScreen> {
       selectedIndex = index;
     });
   }
+
 }

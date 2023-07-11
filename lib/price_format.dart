@@ -5,6 +5,15 @@ class PriceFormatter {
     final formatter = NumberFormat("#,##0.00", "en_US");
     return formatter.format(price);
   }
+   static String formatDateToString(DateTime dateTime) {
+    DateFormat dateFormat = DateFormat("dd MMMM yyyy");
+    return dateFormat.format(dateTime);
+  }
+
+   static DateTime parseDateString(String dateString) {
+  DateFormat dateFormat = DateFormat('dd MMMM yyyy');
+  return dateFormat.parse(dateString);
+}
  static String getFirstName(String fullName) {
   List<String> names = fullName.split(' ');
   
