@@ -35,10 +35,10 @@ class SignupError extends AuthenticationState {
 }
 ///When a user has successfully signed up, the signupseccess state is trigered.
 class SignupSuccess extends AuthenticationState {
-  final String uid;
+ // final String uid;
 
-  SignupSuccess({required this.uid});
+  //SignupSuccess({required this.uid});
 
   @override
-  List<Object> get props => [uid];
+  List<Object> get props => [];
 }

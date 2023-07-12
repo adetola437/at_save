@@ -1,9 +1,9 @@
 import 'package:at_save/bloc/goals/goals_bloc.dart';
-import 'package:at_save/controller/success_controller.dart';
 import 'package:at_save/model/savings_goal.dart';
 import 'package:at_save/price_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../view/screens/edit_view.dart';
@@ -25,6 +25,7 @@ class EditController extends State<EditScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController savedController = TextEditingController();
 
+  ///  Method to format the date gotten from the show date picker.
   Future<void> selectDate(BuildContext context) async {
     // String? nameHint;
     // String?
@@ -55,6 +56,7 @@ class EditController extends State<EditScreen> {
     return '$formattedDay $formattedMonth, $formattedYear';
   }
 
+  ///Converts Datetime variable to string.
   String formatDateToString(DateTime dateTime) {
     DateFormat dateFormat = DateFormat("dd MMMM yyyy");
     return dateFormat.format(dateTime);
@@ -63,6 +65,7 @@ class EditController extends State<EditScreen> {
   @override
   void initState() {
     setState(() {
+      //Setting the values of the textfields to enhance editing
       targetController.text = widget.goal.targetAmount.toString();
       descriptionController.text = widget.goal.description;
       nameController.text = widget.goal.title;
@@ -73,6 +76,7 @@ class EditController extends State<EditScreen> {
 
   @override
   void dispose() {
+    //disposing controllers
     targetController.dispose();
     descriptionController.dispose();
     nameController.dispose();
@@ -84,7 +88,8 @@ class EditController extends State<EditScreen> {
   @override
   Widget build(BuildContext context) => EditView(this);
 
-  Future updateGoal() async {
+  /// Method called when user has filled and edited hid details
+  void updateGoal() async {
     context.read<GoalsBloc>().add(UpdateGoalEvent(
         targetAmount: double.parse(targetController.text),
         goalName: nameController.text,
@@ -93,17 +98,23 @@ class EditController extends State<EditScreen> {
         description: descriptionController.text));
   }
 
+//enebles the overlay widget.
   loading() {
     setState(() {
       isLoading = true;
     });
   }
-
+/// push the succes screen
   success() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const SuccessScreen(
-        text: 'You have successfully updated your goal',
-      ),
-    ));
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const SuccessScreen(
+    //     text: 'You have successfully updated your goal',
+    //   ),
+    // ));
+    context.go('/success', extra: 'You have Successfully Updated your goal');
+  }
+// push the error screen
+  deleteError() {
+    context.go('/error', extra: 'Error deleting goal');
   }
 }

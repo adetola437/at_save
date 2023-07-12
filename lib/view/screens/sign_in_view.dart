@@ -1,4 +1,3 @@
-import 'package:at_save/bloc/goals/goals_bloc.dart';
 import 'package:at_save/bloc/user/user_bloc.dart';
 import 'package:at_save/controller/sign_in_controller.dart';
 import 'package:at_save/view/screens/sign_up_view.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 
 import '../../bloc/autthentication/authentication_bloc.dart';
@@ -60,12 +60,17 @@ class SignInView extends StatelessView<SignInScreen, SignInController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 30.h),
-                        child: SizedBox(
-                          height: 30.h,
-                          width: 30.w,
-                          child: SvgPicture.asset('assets/cancel.svg'),
+                      InkWell(
+                        onTap: () {
+                          context.pop();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 30.h),
+                          child: SizedBox(
+                            height: 30.h,
+                            width: 30.w,
+                            child: SvgPicture.asset('assets/cancel.svg'),
+                          ),
                         ),
                       ),
                       Height(60.h),

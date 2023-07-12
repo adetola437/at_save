@@ -1,6 +1,7 @@
 import 'package:at_save/controller/deposit_controller.dart';
 import 'package:at_save/controller/withdraw_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../view/screens/statistics_view.dart';
 
@@ -25,15 +26,19 @@ class StatisticsController extends State<StatisticsScreen> {
   @override
   Widget build(BuildContext context) => StatisticsView(this);
 
+  /// triggers the withdrae feature
   pushWithdraw() {
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-      return const WithdrawScreen();
-    }));
+    context.push('/withdraw');
+    //   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+    //     return const WithdrawScreen();
+    //   }));
   }
-
+//push the depoist screen
   pushDeposit() {
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-      return const DepositScreen();
-    }));
+    // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+    //   return const DepositScreen();
+    // }));\
+
+    context.push('/deposit');
   }
 }

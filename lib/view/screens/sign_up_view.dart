@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../bloc/autthentication/authentication_bloc.dart';
 import '../../boiler_plate/stateless_view.dart';
@@ -29,17 +31,24 @@ class SignUpView extends StatelessView<SignUpScreen, SignUpController> {
                 if (state is SignupSuccess) {
                   controller.pushLogin();
                 }
-                
+                if (state is SignupError) {
+                  Fluttertoast.showToast(msg: state.error);
+                }
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 30.h),
-                    child: SizedBox(
-                      height: 30.h,
-                      width: 30.w,
-                      child: SvgPicture.asset('assets/cancel.svg'),
+                  InkWell(
+                    onTap: () {
+                      context.pop();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 30.h),
+                      child: SizedBox(
+                        height: 30.h,
+                        width: 30.w,
+                        child: SvgPicture.asset('assets/cancel.svg'),
+                      ),
                     ),
                   ),
                   Height(60.h),

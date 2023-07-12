@@ -153,12 +153,14 @@ class ExpensesController extends State<ExpensesScreen> {
   //     }
   //   });
   // }
-
+  ///method called to create a new budget
   void createBudget() async {
     context.read<BudgetBloc>().add(CreateBudgetEvent(
         budgetAmount: double.parse(amountController.text),
         budgetName: nameController.text,
         color: getColorValue(generateRandomColor())));
+    nameController.clear();
+    amountController.clear();
   }
 
   loading() {
@@ -167,6 +169,7 @@ class ExpensesController extends State<ExpensesScreen> {
     });
   }
 
+  /// widget to build the indicators for all the colors with their respective category
   List<Widget> buildColorIndicators(List<Budget> budgets) {
     List<Widget> indicators = [];
 
@@ -248,6 +251,7 @@ class ExpensesController extends State<ExpensesScreen> {
     return indicators;
   }
 
+  /// when creating a budget, this method is used to generate a random color
   Color generateRandomColor() {
     final random = Random();
     return Color.fromARGB(
@@ -258,6 +262,7 @@ class ExpensesController extends State<ExpensesScreen> {
     );
   }
 
+  ///converts a color variable to its respective integer
   int getColorValue(Color color) {
     return color.value;
   }
@@ -266,6 +271,7 @@ class ExpensesController extends State<ExpensesScreen> {
     return Color(colorValue);
   }
 
+  ///Get the total expenses for all the expense transactions made
   double getTotalExpenses(List<Expense> expenses) {
     double totalExpenses = 0;
     for (Expense expense in expenses) {

@@ -1,6 +1,6 @@
-import 'package:at_save/controller/welcome_controller.dart';
 import 'package:at_save/view/screens/onboarding_view.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../model/onboarding.dart';
 import '../view/widgets/onbording_widget.dart';
@@ -22,11 +22,11 @@ class OnboardingController extends State<OnboardingScreen> {
   void dispose() {
     super.dispose();
   }
-
+//declaring variables
   bool lastPage = false;
   int currentIndex = 0;
   final PageController controller = PageController();
-
+//creating a list of sliders to pass to a listview
   List<SliderText> sliderNote = [
     SliderText(
       slider: SliderModel(
@@ -50,6 +50,7 @@ class OnboardingController extends State<OnboardingScreen> {
               'Integrate multiple payment methods to help you up the process quickly'),
     ),
   ];
+  //handles the next page icon
   onNextClick() {
     setState(() {
       if (currentIndex <= 1) {
@@ -68,7 +69,7 @@ class OnboardingController extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) => OnboardingView(this);
-
+//callback function to set the index value to the current value
   togglePage(value) {
     setState(() {
       currentIndex = value;
@@ -76,10 +77,11 @@ class OnboardingController extends State<OnboardingScreen> {
       lastPage = value == 2;
     });
   }
-
+//Push the homescreen
   pushWelcomeScreen() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const WelcomeScreen(),
-    ));
+    context.go('/welcome');
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const WelcomeScreen(),
+    // ));
   }
 }

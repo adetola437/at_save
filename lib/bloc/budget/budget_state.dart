@@ -10,6 +10,7 @@ abstract class BudgetState extends Equatable {
 class BudgetInitial extends BudgetState {}
 
 class BudgetLoading extends BudgetState {}
+class BudgetLoadingError extends BudgetState {}
 
 class BudgetCreated extends BudgetState {}
 

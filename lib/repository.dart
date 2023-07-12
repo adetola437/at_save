@@ -82,9 +82,9 @@ class Repository {
     await remoteDatabase.breakSavings(id, amount);
   }
 
-  Future deleteGoal(String id, double amount) async {
-    print('repo delete');
-    await remoteDatabase.deleteGoal(id, amount);
+  Future<bool> deleteGoal(String id, double amount) async {
+   // print('repo delete');
+   return await remoteDatabase.deleteGoal(id, amount);
   }
 
   Future createTransaction(SavingsTransaction transaction) async {
@@ -99,6 +99,9 @@ class Repository {
 
   Future createBudget(Budget budget) async {
     await remoteDatabase.createBudget(budget);
+  }
+   Future createLocalBudget(Budget budget) async {
+    await localDatabase.createBudget(budget);
   }
 
   Future addMoneyToBudget(String budgetName, double amount) async {

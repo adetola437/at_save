@@ -72,6 +72,7 @@ class DetailsView extends StatelessView<DetailsScreen, DetailsController> {
               controller.success();
             }
             if (state is GoalsLoadingError) {
+              controller.deleteError();
               controller.notLoading();
               Fluttertoast.showToast(msg: 'Error Adding savings');
             }

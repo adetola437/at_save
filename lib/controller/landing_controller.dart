@@ -10,6 +10,7 @@ class LandingScreen extends StatefulWidget {
 }
 
 class LandingController extends State<LandingScreen> {
+  // position of the page
   var selectedIndex = 0;
   @override
   void initState() {
@@ -23,7 +24,7 @@ class LandingController extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) => LandingView(this);
-
+// handles the toggle of the navigation bar
   void onItemTapped(int index) {
     setState(() {
       selectedIndex = index;

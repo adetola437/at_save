@@ -1,11 +1,11 @@
 import 'package:at_save/bloc/goals/goals_bloc.dart';
 import 'package:at_save/controller/error_controller.dart';
-import 'package:at_save/controller/success_controller.dart';
 import 'package:at_save/model/savings_goal.dart';
 import 'package:at_save/view/screens/summary_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../bloc/target/target_bloc.dart';
@@ -56,11 +56,12 @@ class SummaryController extends State<SummaryScreen> {
   Future success() async {
     context.read<GoalsBloc>().add(GetGoalsEvent());
     isLoading = false;
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const SuccessScreen(
-        text: 'You have Successfully created your Goal',
-      ),
-    ));
+    context.go('/success', extra: 'You have Successfully created your Goal');
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const SuccessScreen(
+    //     text: 'You have Successfully created your Goal',
+    //   ),
+    // ));
   }
 
   void error() {
@@ -68,11 +69,11 @@ class SummaryController extends State<SummaryScreen> {
       isLoading = false;
     });
     Fluttertoast.showToast(msg: 'Error Creating your Target');
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-      return  ErrorScreen();
-    }));
+    // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+    //   return const ErrorScreen();
+    // }));
   }
-
+//formats datetime to string
   String formatDateToString(DateTime dateTime) {
     DateFormat dateFormat = DateFormat("dd MMMM yyyy");
     return dateFormat.format(dateTime);

@@ -1,6 +1,5 @@
-import 'package:at_save/theme/colors.dart';
-import 'package:at_save/controller/sign_up_controller.dart';
 import 'package:at_save/controller/welcome_controller.dart';
+import 'package:at_save/theme/colors.dart';
 import 'package:at_save/view/widgets/button.dart';
 import 'package:at_save/view/widgets/height.dart';
 import 'package:at_save/view/widgets/outline_button.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../boiler_plate/stateless_view.dart';
-import '../../controller/sign_in_controller.dart';
 import '../../theme/text.dart';
 
 class WelcomeView extends StatelessView<WelcomeScreen, WelcomeController> {

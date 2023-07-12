@@ -18,6 +18,8 @@ class RemoteDatabase {
 
   SessionManager manager = SessionManager();
 //Get the current logged in user
+
+
   Future<User> getUser() async {
     String? userId = await manager.getUid();
     try {
@@ -284,16 +286,15 @@ class RemoteDatabase {
     try {
       await removeFromSavingsBalance(amount, id);
       await removeFromUserTotalSavingsBalance(amount);
-      changeSavingsStatus(id, 'Terminated');
+     await changeSavingsStatus(id, 'Terminated');
       await addToWalletBalance(amount, id);
     } catch (e) {
       print(e);
     }
   }
 
-  Future deleteGoal(String id, double amount) async {
+  Future<bool> deleteGoal(String id, double amount) async {
     try {
-      await breakSavings(id, amount);
       String? uid = await manager.getUid();
       final DocumentReference goalRef = FirebaseFirestore.instance
           .collection('goals')
@@ -302,10 +303,13 @@ class RemoteDatabase {
           .doc(id);
 
       await goalRef.delete();
+      await breakSavings(id, amount);
       await deleteAllTransactions(id);
-      print('Goal deleted successfully!');
+      return true;
+      //print('Goal deleted successfully!');
     } catch (e) {
-      print('Error Deleting goal');
+      return false;
+      //print('Error Deleting goal');
     }
   }
 
@@ -366,6 +370,8 @@ class RemoteDatabase {
 
   Future updateSavings(String id, String title, String description,
       double targetAmount, DateTime date) async {
+    print(id);
+
     try {
       String? uid = await manager.getUid();
       final userSnapshot = FirebaseFirestore.instance

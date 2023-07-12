@@ -1,7 +1,7 @@
 import 'package:at_save/controller/sign_in_controller.dart';
-import 'package:at_save/controller/sign_up_controller.dart';
 import 'package:at_save/view/screens/welcome_view.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -24,14 +24,17 @@ class WelcomeController extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) => WelcomeView(this);
 
-   void pushSignIn() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const SignInScreen(),
-    ));
+  void pushSignIn() {
+    context.push(SignInScreen.route);
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const SignInScreen(),
+    // ));
   }
-   void pushSignUp() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const SignUpScreen(),
-    ));
+
+  void pushSignUp() {
+    context.push('/sign_up');
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const SignUpScreen(),
+    // ));
   }
 }

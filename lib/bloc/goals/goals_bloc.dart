@@ -1,6 +1,7 @@
 import 'package:at_save/model/savings_goal.dart';
 import 'package:at_save/repository.dart';
 import 'package:bloc/bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 
 part 'goals_event.dart';
@@ -105,19 +106,36 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
   }
 
   _getGoals(GetGoalsEvent event, emit) async {
+    var connectivityResult = await Connectivity().checkConnectivity();
     emit(GoalsLoading());
-    Repository repo = Repository();
-    List<SavingsGoal> localGoals = await repo.getGoals();
     try {
-      final List<SavingsGoal> remoteGoals = await repo.getGoals();
+      Repository repo = Repository();
+      List<SavingsGoal> localGoals = await repo.getLocalGoals();
+      if (connectivityResult == ConnectivityResult.none) {
+        print('loacl goals');
+        emit(GoalsLoaded(
+            goals: localGoals
+              ..sort((a, b) => b.createdDate.compareTo(a.createdDate))));
+      } else if (connectivityResult == ConnectivityResult.wifi ||
+          connectivityResult == ConnectivityResult.mobile) {
+        try {
+          print('connected');
+          final List<SavingsGoal> remoteGoals = await repo.getGoals();
 
-      if (localGoals != remoteGoals) {
-        await repo.populateGoals(remoteGoals);
+          if (localGoals != remoteGoals) {
+            await repo.populateGoals(remoteGoals);
+          }
+          localGoals = await repo.getGoals();
+
+          emit(GoalsLoaded(
+              goals: localGoals
+                ..sort((a, b) => b.createdDate.compareTo(a.createdDate))));
+        } on Exception {
+          emit(GoalsLoadingError());
+        }
       }
-      localGoals = await repo.getGoals();
-
-      emit(GoalsLoaded(goals: localGoals));
-    } on Exception {
+    } catch (e) {
+      print('eeor');
       emit(GoalsLoadingError());
     }
   }
@@ -127,16 +145,12 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
     print('deleting');
     try {
       Repository repo = Repository();
-      await repo.deleteGoal(event.id, event.amount);
-      List<SavingsGoal> localGoals = await repo.getGoals();
-
-      final List<SavingsGoal> remoteGoals = await repo.getGoals();
-
-      if (localGoals != remoteGoals) {
-        await repo.populateGoals(remoteGoals);
+      bool status = await repo.deleteGoal(event.id, event.amount);
+      if (status == true) {
+        emit(GoalDeleted());
+      } else {
+        emit(GoalsLoadingError());
       }
-      localGoals = await repo.getGoals();
-      emit(GoalDeleted());
 
       // emit(GoalsLoaded(goals: localGoals));
     } catch (e) {

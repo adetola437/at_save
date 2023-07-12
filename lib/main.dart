@@ -1,9 +1,11 @@
 import 'package:at_save/Database/local_database.dart';
+import 'package:at_save/apap_router.dart';
 import 'package:at_save/bloc/budget/budget_bloc.dart';
 import 'package:at_save/bloc/expense_transaction/expense_transaction_bloc.dart';
 import 'package:at_save/bloc/goals/goals_bloc.dart';
 import 'package:at_save/bloc/savings_transaction/savings_transactions_bloc.dart';
 import 'package:at_save/bloc/target/target_bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +25,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
    await FirebaseMessaging.instance.getInitialMessage();
   await LocalDatabase.openIsar();
   GoogleFonts.ibmPlexSans(); // Initialize the desired font
@@ -60,8 +63,9 @@ class MyApp extends StatelessWidget {
         ],
         child: ScreenUtilInit(
           designSize: const Size(375, 812),
-          builder: (context, child) => const MaterialApp(
-            home: Splash(),
+          builder: (context, child) =>  MaterialApp.router(
+            routerConfig: router,
+            //home: Splash(),
           ),
         ));
   }

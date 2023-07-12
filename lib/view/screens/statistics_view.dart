@@ -104,36 +104,39 @@ class StatisticsView
               ),
             ),
             Height(20.h),
-            Padding(
-              padding: EdgeInsets.only(left: 20.w),
-              child: Text(
-                'Transaction History',
-                style: MyText.bodyBold(),
-              ),
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 20.w),
+                  child: Text(
+                    'Transaction History',
+                    style: MyText.bodyBold(),
+                  ),
+                ),
+                SizedBox(
+                  height: 300.h,
+                  width: 370.w,
+                  child: BlocBuilder<ExpenseTransactionBloc,
+                      ExpenseTransactionState>(
+                    builder: (context, state) {
+                      if (state is ExpenseTransactionLoaded) {
+                        return ListView.builder(
+                            itemCount: state.expenses.length,
+                            itemBuilder: (ctx, index) {
+                              return ExpenseWidget(
+                                  expense: state.expenses[index]);
+                            });
+                      }
+                      return Container();
+                    },
+                  ),
+                )
+              ],
             ),
 
             // Height(30.h),
           ],
         ),
-        Positioned(
-          top: 330.h,
-          child: SizedBox(
-            height: 300.h,
-            width: 370.w,
-            child: BlocBuilder<ExpenseTransactionBloc, ExpenseTransactionState>(
-              builder: (context, state) {
-                if (state is ExpenseTransactionLoaded) {
-                  return ListView.builder(
-                      itemCount: state.expenses.length,
-                      itemBuilder: (ctx, index) {
-                        return ExpenseWidget(expense: state.expenses[index]);
-                      });
-                }
-                return Container();
-              },
-            ),
-          ),
-        )
       ],
     );
   }

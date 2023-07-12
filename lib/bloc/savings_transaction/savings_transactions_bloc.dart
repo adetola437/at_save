@@ -1,5 +1,6 @@
 import 'package:at_save/repository.dart';
 import 'package:bloc/bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../model/savings_transaction.dart';
@@ -25,19 +26,27 @@ class SavingsTransactionsBloc
   _fetchTransactions(FetchSavingsTransactions event, emit) async {
     emit(SavingsTransactionsLoading());
     Repository repo = Repository();
+    var connectivityResult = await Connectivity().checkConnectivity();
     List<SavingsTransaction> localTransactions =
         await repo.getLocalTransactions();
+
     try {
-      final List<SavingsTransaction> remoteTransactions =
-          await repo.getTransactions();
+      if (connectivityResult == ConnectivityResult.none) {
+        print('local savingsT');
+        emit(SavingsTransactionsLoaded(transactions: localTransactions));
+      } else if (connectivityResult == ConnectivityResult.wifi ||
+          connectivityResult == ConnectivityResult.mobile) {
+        final List<SavingsTransaction> remoteTransactions =
+            await repo.getTransactions();
 
-      if (localTransactions != remoteTransactions) {
-        await repo.populateSavingsTransactions(remoteTransactions);
+        if (localTransactions != remoteTransactions) {
+          await repo.populateSavingsTransactions(remoteTransactions);
+        }
+        localTransactions = await repo.getLocalTransactions();
+
+        emit(SavingsTransactionsLoaded(transactions: localTransactions));
       }
-      localTransactions = await repo.getLocalTransactions();
-
-      emit(SavingsTransactionsLoaded(transactions: localTransactions));
-    } on Exception {
+    } catch (e) {
       emit(SavingsTransactionsError());
     }
   }

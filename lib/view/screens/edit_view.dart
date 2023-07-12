@@ -36,6 +36,9 @@ class EditView extends StatelessView<EditScreen, EditController> {
           if (state is GoalEdited) {
             controller.success();
           }
+          if (state is GoalsLoadingError) {
+            controller.deleteError();
+          }
         },
         child: Scaffold(
           body: Form(

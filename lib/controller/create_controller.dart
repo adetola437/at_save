@@ -2,6 +2,7 @@ import 'package:at_save/controller/summary_controller.dart';
 import 'package:at_save/view/screens/create_view.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../model/savings_goal.dart';
@@ -14,7 +15,6 @@ class CreateScreen extends StatefulWidget {
 }
 
 class CreateController extends State<CreateScreen> {
-
   //Initializing
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController targetController = TextEditingController();
@@ -30,7 +30,7 @@ class CreateController extends State<CreateScreen> {
   @override
   void dispose() {
     //Disposing controllers
-    
+
     targetController.dispose();
     descriptionController.dispose();
     nameController.dispose();
@@ -56,7 +56,8 @@ class CreateController extends State<CreateScreen> {
 
     return '$formattedDay $formattedMonth, $formattedYear';
   }
-///This is the method that displays the callender widget for the user to select
+
+  ///This is the method that displays the callender widget for the user to select
   Future<void> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -70,7 +71,8 @@ class CreateController extends State<CreateScreen> {
       });
     }
   }
-///This actions is called when a user has inputed all of his savings details for preview.
+
+  ///This actions is called when a user has inputed all of his savings details for preview.
   void goToSummary() {
     late SavingsGoal goal;
     if (formKey.currentState!.validate()) {
@@ -89,14 +91,16 @@ class CreateController extends State<CreateScreen> {
             targetDate: parseDateString(dateController.text),
             description: descriptionController.text);
       }
+      context.push('/summary', extra: goal);
 //pushes the summary screen
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) {
-        return SummaryScreen(goal: goal);
-      }));
+      // Navigator.push(context,
+      //     MaterialPageRoute(builder: (BuildContext context) {
+      //   return SummaryScreen(goal: goal);
+      // }));
     }
   }
-///Format method used to edit datetime
+
+  ///Format method used to edit datetime
   DateTime parseDateString(String dateString) {
     DateFormat dateFormat = DateFormat("dd MMMM, yyyy");
     return dateFormat.parse(dateString);

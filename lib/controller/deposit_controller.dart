@@ -1,6 +1,7 @@
 import 'package:at_save/controller/success_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../bloc/expense_transaction/expense_transaction_bloc.dart';
 import '../view/screens/deposit_view.dart';
@@ -59,10 +60,11 @@ class DepositController extends State<DepositScreen> {
   }
 ///This is the action trigered when the action deposit is successful to go to the success page
   pushSuccess() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const SuccessScreen(
-        text: 'You have Successfully Deposited your funds',  //Text displayed in success screen.
-      ),
-    ));
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const SuccessScreen(
+    //     text: 'You have Successfully Deposited your funds',  //Text displayed in success screen.
+    //   ),
+    // ));
+     context.go('/success', extra: 'You have successfully deposited your funds');
   }
 }

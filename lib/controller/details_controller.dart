@@ -1,14 +1,12 @@
 import 'package:at_save/bloc/goals/goals_bloc.dart';
 import 'package:at_save/controller/add_money_controller.dart';
-import 'package:at_save/controller/edit_details_controller.dart';
-import 'package:at_save/controller/success_controller.dart';
-import 'package:at_save/controller/view_history_controller.dart';
 import 'package:at_save/model/savings_goal.dart';
 import 'package:at_save/view/screens/details_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../theme/text.dart';
@@ -127,10 +125,11 @@ class DetailsController extends State<DetailsScreen> {
 
   ///This is the method that is triggered when a goal has been successfully deletred
   success() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) =>
-          const SuccessScreen(text: 'You have successfully deleted the goal'),
-    ));
+    context.go('/success', extra: 'You have successfully deleted the goal');
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) =>
+    //       const SuccessScreen(text: 'You have successfully deleted the goal'),
+    // ));
   }
 
   ///This action is triggered when the user want to add money to savings by clickin the add money button
@@ -175,10 +174,11 @@ class DetailsController extends State<DetailsScreen> {
 
   ///When the goal has been successfully broken, this method is called
   breakSuccess() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const SuccessScreen(
-          text: 'You have successfully broken your savings'),
-    ));
+    context.go('/success', extra: 'You have successfully broken the goal');
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const SuccessScreen(
+    //       text: 'You have successfully broken your savings'),
+    // ));
   }
 
   ///This is the action button used to delete a goal
@@ -201,11 +201,13 @@ class DetailsController extends State<DetailsScreen> {
 
   ///When a user wants to edit his goals details, the edit button is clicked and this action is executed
   goToUpdate(SavingsGoal goal) {
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-      return EditScreen(
-        goal: goal,
-      );
-    }));
+    print(goal.id);
+    context.push('/edit_screen', extra: goal);
+    // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+    //   return EditScreen(
+    //     goal: goal,
+    //   );
+    // }));
   }
 
   String formatDateToString(DateTime dateTime) {
@@ -215,10 +217,15 @@ class DetailsController extends State<DetailsScreen> {
 
   ///Go to history
   viewHistory() {
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-      return HistoryScreen(
-        id: widget.goalId,
-      );
-    }));
+    context.push('history', extra: widget.goalId);
+    // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+    //   return HistoryScreen(
+    //     id: widget.goalId,
+    //   );
+    // }));
+  }
+
+  deleteError() {
+    context.go('/error', extra: 'Error deleting goal');
   }
 }

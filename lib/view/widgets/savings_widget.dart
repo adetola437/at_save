@@ -1,6 +1,7 @@
 import 'package:at_save/model/savings_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../controller/details_controller.dart';
 import '../../price_format.dart';
@@ -31,12 +32,13 @@ class SavingsWidget extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: InkWell(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (BuildContext context) {
-              return DetailsScreen(
-                goalId: goal.id,
-              );
-            }));
+            context.push('/details', extra: goal.id);
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (BuildContext context) {
+            //   return DetailsScreen(
+            //     goalId: goal.id,
+            //   );
+            // }));
           },
           child: Container(
             height: 140.h,

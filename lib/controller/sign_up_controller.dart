@@ -2,6 +2,7 @@ import 'package:at_save/controller/sign_in_controller.dart';
 import 'package:at_save/view/screens/sign_up_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../bloc/autthentication/authentication_bloc.dart';
 
@@ -13,6 +14,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class SignUpController extends State<SignUpScreen> {
+  //declaration
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -35,7 +37,7 @@ class SignUpController extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) => SignUpView(this);
-
+// handles password visibilty
   void changeVisibility() {
     setState(() {
       obscureText = !obscureText;
@@ -53,8 +55,9 @@ class SignUpController extends State<SignUpScreen> {
   }
 
   void pushLogin() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const SignInScreen(),
-    ));
+    context.push( SignInScreen.route);
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const SignInScreen(),
+    // ));
   }
 }

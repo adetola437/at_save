@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:bloc/bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,20 +20,26 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   _fetchUser(FetchUserEvent event, emit) async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    emit(UserLoading());
     var localUsers = await repository.localUsers();
     try {
-      final remoteUsers = await repository.remoteUsers();
+      if (connectivityResult == ConnectivityResult.none) {
+        print('local users');
+        emit(UserSuccess(user: localUsers!));
+      } else if (connectivityResult == ConnectivityResult.wifi ||
+          connectivityResult == ConnectivityResult.mobile) {
+        final remoteUsers = await repository.remoteUsers();
 
-      if (localUsers != remoteUsers) {
-        await repository.populateUser(remoteUsers);
+        if (localUsers != remoteUsers) {
+          await repository.populateUser(remoteUsers);
+        }
+        localUsers = await repository.localUsers();
+
+        emit(UserSuccess(user: localUsers!));
       }
-      localUsers = await repository.localUsers();
-
-      emit(UserSuccess(user: localUsers!));
-    } on Exception {
+    } catch (e) {
       emit(UserError());
-      // log(e.toString());
-      // emit(UserSuccess(user: localUsers!));
     }
   }
 }

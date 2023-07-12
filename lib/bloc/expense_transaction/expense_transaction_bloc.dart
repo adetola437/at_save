@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../model/expense.dart';
@@ -43,23 +44,29 @@ class ExpenseTransactionBloc
   }
 
   _fetchExpenseTransactions(FetchExpenseTransaction event, emit) async {
+    var connectivityResult = await Connectivity().checkConnectivity();
     emit(ExpenseTransactionLoading());
     Repository repo = Repository();
-
+    List<Expense> localExpenses = await repo.getLocalExpenses();
     try {
-      List<Expense> localExpenses = await repo.getLocalExpenses();
+      if (connectivityResult == ConnectivityResult.none) {
+        print('local expense');
+        emit(ExpenseTransactionLoaded(expenses: localExpenses));
+      } else if (connectivityResult == ConnectivityResult.wifi ||
+          connectivityResult == ConnectivityResult.mobile) {
+        final List<Expense> remoteExpenses = await repo.getRemoteExpense();
 
-      final List<Expense> remoteExpenses = await repo.getRemoteExpense();
+        if (localExpenses != remoteExpenses) {
+          await repo.populateExpensesTransactions(remoteExpenses);
+        }
 
-      if (localExpenses != remoteExpenses) {
-        await repo.populateExpensesTransactions(remoteExpenses);
+        localExpenses = await repo.getLocalExpenses();
+
+        emit(ExpenseTransactionLoaded(expenses: remoteExpenses));
       }
-
-      localExpenses = await repo.getLocalExpenses();
-
-      emit(ExpenseTransactionLoaded(expenses: remoteExpenses));
     } catch (e) {
       print(e);
+      emit(ExpenseTransactionError());
     }
   }
 }

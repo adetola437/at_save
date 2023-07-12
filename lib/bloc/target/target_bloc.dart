@@ -28,8 +28,8 @@ _createTarget(CreateTargetEvent event, emit) async {
         targetDate: event.targetDate,
         description: event.description);
     await repo.createGoal(goal);
-    emit(TargetError());
-    // emit(TargetLoaded());
+    //emit(TargetError());
+    emit(TargetLoaded());
   } catch (e) {
     emit(TargetError());
     print(e);

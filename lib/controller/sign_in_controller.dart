@@ -1,10 +1,10 @@
 import 'package:at_save/bloc/expense_transaction/expense_transaction_bloc.dart';
 import 'package:at_save/bloc/savings_transaction/savings_transactions_bloc.dart';
 import 'package:at_save/controller/landing_controller.dart';
-import 'package:at_save/controller/sign_up_controller.dart';
 import 'package:at_save/view/screens/sign_in_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../bloc/autthentication/authentication_bloc.dart';
 import '../bloc/budget/budget_bloc.dart';
@@ -12,6 +12,7 @@ import '../bloc/goals/goals_bloc.dart';
 import '../bloc/user/user_bloc.dart';
 
 class SignInScreen extends StatefulWidget {
+  static const route = '/signin';
   const SignInScreen({super.key});
 
   @override
@@ -38,17 +39,18 @@ class SignInController extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) => SignInView(this);
-
+//handles the password visibilty
   void changeVisibility() {
     setState(() {
       obscureText = !obscureText;
     });
   }
-
+/// navigate to the signup page
   void pushSignIn() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const SignUpScreen(),
-    ));
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const SignUpScreen(),
+    // ));
+    context.push('/sign_up');
   }
 
   void onLogin() {
@@ -59,9 +61,10 @@ class SignInController extends State<SignInScreen> {
   }
 
   void pushLandingPage() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const LandingScreen(),
-    ));
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const LandingScreen(),
+    // ));
+    context.go('/home');
   }
 
   loading() {
@@ -75,7 +78,7 @@ class SignInController extends State<SignInScreen> {
       isLoading = false;
     });
   }
-
+///Method to pull all of the logged in user date from the server on login
   void getUserDetails() {
     context.read<UserBloc>().add(FetchUserEvent());
     context.read<GoalsBloc>().add(GetGoalsEvent());

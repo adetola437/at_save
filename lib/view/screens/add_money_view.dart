@@ -95,7 +95,7 @@ class AddMoneyView extends StatelessView<AddMoneyScreen, AddMoneyController> {
     return BlocListener<GoalsBloc, GoalsState>(
       listener: (context, state) {
         if (state is GoalTopUp) {
-          controller.pushPage();
+          controller.pushSucess();
         }
         if (state is GoalsLoading) {
           controller.loading();
