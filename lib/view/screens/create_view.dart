@@ -7,6 +7,7 @@ import 'package:at_save/view/widgets/nav_container.dart';
 import 'package:at_save/view/widgets/textfield_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../boiler_plate/stateless_view.dart';
 import '../../controller/create_controller.dart';
@@ -28,7 +29,11 @@ class CreateView extends StatelessView<CreateScreen, CreateController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Height(10.h),
-                NavContainer(icon: Icons.arrow_back_ios),
+                InkWell(
+                    onTap: () {
+                      context.pop();
+                    },
+                    child: NavContainer(icon: Icons.arrow_back_ios)),
                 Height(10.h),
                 const Heading(text: 'Create savings'),
                 Height(10.h),
@@ -58,13 +63,27 @@ class CreateView extends StatelessView<CreateScreen, CreateController> {
                 Height(20.h),
                 const Head(text: 'Duration'),
                 Height(10.h),
-                TextfieldWidget(
-                    setDate: () {
-                      controller.selectDate(context);
-                    },
-                    textFieldType: 'date',
-                    controller: controller.dateController,
-                    hintText: 'date'),
+                SizedBox(
+                  child: Stack(
+                    children: [
+                      TextfieldWidget(
+                          setDate: () {
+                            controller.selectDate(context);
+                          },
+                          textFieldType: 'date',
+                          controller: controller.dateController,
+                          hintText: 'date'),
+                      Positioned(
+                        left: 280.w,
+                        child: IconButton(
+                            onPressed: () {
+                              controller.selectDate(context);
+                            },
+                            icon: const Icon(Icons.calendar_month)),
+                      )
+                    ],
+                  ),
+                ),
                 Height(20.h),
                 const Head(text: 'How much do you want to save now?'),
                 Height(10.h),

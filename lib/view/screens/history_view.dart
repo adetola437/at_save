@@ -1,7 +1,8 @@
-import 'package:at_save/price_format.dart';
+import 'package:at_save/utils/price_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 
@@ -9,7 +10,6 @@ import '../../bloc/savings_transaction/savings_transactions_bloc.dart';
 import '../../boiler_plate/stateless_view.dart';
 import '../../controller/view_history_controller.dart';
 import '../../model/savings_transaction.dart';
-import '../../theme/colors.dart';
 import '../../theme/text.dart';
 import '../widgets/height.dart';
 
@@ -27,16 +27,17 @@ class HistoryView extends StatelessView<HistoryScreen, HistoryController> {
             children: [
               Height(20.h),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.black,
-                  ),
-                  Width(100.w),
+                  IconButton(
+                      onPressed: () {
+                        context.pop();
+                      },
+                      icon: const Icon(Icons.arrow_back_ios)),
+                  // Width(100.w),
                   Text(
-                    'My Wallet',
-                    style: MyText.bodyLg(color: AppColor.primaryColor),
+                    'My Savings Transactions',
+                    style: MyText.bodyLg(),
                   )
                 ],
               ),

@@ -21,7 +21,8 @@ class AddMoneyToSavingsEvent extends GoalsEvent {
 class BreakSavingsEvent extends GoalsEvent {
   final String id;
   final double amount;
-  const BreakSavingsEvent({required this.amount, required this.id});
+   String? status;
+   BreakSavingsEvent({required this.amount, required this.id, this.status});
 
   @override
   List<Object> get props => [];

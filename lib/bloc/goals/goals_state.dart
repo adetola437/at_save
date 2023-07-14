@@ -22,9 +22,13 @@ class GoalsLoaded extends GoalsState {
 class GoalsLoadingError extends GoalsState {}
 
 class GoalDeleted extends GoalsState {}
+class GoalDeleteError extends GoalsState {}
 
 class GoalEdited extends GoalsState {}
+class GoalEditError extends GoalsState {}
 
 class GoalBroken extends GoalsState {}
+class GoalBreakError extends GoalsState {}
 
 class GoalTopUp extends GoalsState {}
+class GoalTopUpError extends GoalsState {}

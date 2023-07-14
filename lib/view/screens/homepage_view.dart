@@ -1,16 +1,22 @@
 import 'package:at_save/controller/hompeage_controller.dart';
-import 'package:at_save/price_format.dart';
+import 'package:at_save/controller/landing_controller.dart';
 import 'package:at_save/theme/colors.dart';
 import 'package:at_save/theme/text.dart';
+import 'package:at_save/utils/price_format.dart';
 import 'package:at_save/view/widgets/height.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
+import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 
-import '../../Database/remote_database.dart';
+import '../../bloc/budget/budget_bloc.dart';
 import '../../bloc/user/user_bloc.dart';
 import '../../boiler_plate/stateless_view.dart';
+import '../widgets/carousel_widget.dart';
 
 class HomePageView extends StatelessView<HomeScreen, HomeController> {
   const HomePageView(HomeController controller, {Key? key})
@@ -18,147 +24,221 @@ class HomePageView extends StatelessView<HomeScreen, HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.backBackground,
-      body: SafeArea(
-          child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Height(20.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return OverlayLoaderWithAppIcon(
+      isLoading: controller.isLoading,
+      appIcon: SvgPicture.asset(
+        'assets/green.svg',
+        color: AppColor.primaryColor,
+      ),
+      child: Scaffold(
+        backgroundColor: AppColor.backBackground,
+        body: BlocListener<UserBloc, UserState>(
+          listener: (context, state) {
+            if (state is UserLoading) {
+              controller.loading();
+            }
+            if (state is UserSuccess) {
+              controller.notLoading();
+            }
+            // TODO: implement listener
+          },
+          child: SafeArea(
+              child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Height(20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          BlocBuilder<UserBloc, UserState>(
+                            builder: (context, state) {
+                              if (state is UserSuccess) {
+                                String fullname = state.user.name;
+                                String name =
+                                    PriceFormatter.getFirstName(fullname);
+                                return SizedBox(
+                                  width: 200.w,
+                                  child: Text(
+                                    'Hello $name',
+                                    style: MyText.header(),
+                                  ),
+                                );
+                              }
+                              return Container();
+                            },
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Good day, Remember to save today',
+                                style: MyText.mobileMd(),
+                              ),
+                              Image.asset('assets/money.png')
+                            ],
+                          ),
+                        ],
+                      ),
                       BlocBuilder<UserBloc, UserState>(
                         builder: (context, state) {
                           if (state is UserSuccess) {
-                            String fullname = state.user.name;
-                            String name = PriceFormatter.getFirstName(fullname);
-                            return SizedBox(
-                              width: 200.w,
-                              child: Text(
-                                'Hello $name',
-                                style: MyText.header(),
+                            String initials =
+                                controller.getInitials(state.user.name);
+                            return Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 3, color: AppColor.secondaryColor),
+                                  shape: BoxShape.circle),
+                              height: 50.h,
+                              width: 50.h,
+                              child: Center(
+                                child: Text(
+                                  initials,
+                                  style: MyText.bodyLg(),
+                                ),
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
+                      )
+                    ],
+                  ),
+                  Height(20.h),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      if (state is UserSuccess) {
+                        List<CarouselWidget> carousel = [
+                          CarouselWidget(
+                            amount: state.user.savingsBalance! +
+                                state.user.walletBalance!,
+                            title: 'Total Balance',
+                            color: AppColor.primaryColor,
+                          ),
+                          CarouselWidget(
+                            amount: state.user.savingsBalance!,
+                            title: 'Total Savings',
+                            color: AppColor.complementaryColor1,
+                          )
+                        ];
+                        return SizedBox(
+                          height: 140.h,
+                          width: double.maxFinite,
+                          child: CarouselSlider.builder(
+                              itemCount: 2,
+                              controller: controller.carouselController,
+                              autoSliderTransitionTime:
+                                  const Duration(milliseconds: 500),
+                              // unlimitedMode: true,
+                              viewportFraction: 0.9,
+                              initialPage: 0,
+                              onSlideChanged: (value) =>
+                                  controller.togglePage(value),
+                              slideTransform:
+                                  const ForegroundToBackgroundTransform(),
+                              slideBuilder: (index) {
+                                return carousel[index];
+                              }),
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
+                  Height(20.h),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                          2, (index) => dotContainer(index, context)),
+                    ),
+                  ),
+                  Height(20.h),
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          context.push('/deposit');
+                        },
+                        child: const Transaction(
+                          color: AppColor.shade4,
+                          image: 'assets/add.png',
+                          text: 'Add money',
+                        ),
+                      ),
+                      Width(20.w),
+                      BlocBuilder<BudgetBloc, BudgetState>(
+                        builder: (context, state) {
+                          if (state is BudgetLoaded) {
+                            return InkWell(
+                              onTap: () {
+                                if (state.budget.isNotEmpty) {
+                                  controller.goToWithdraw();
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg:
+                                          'You need to create a budget to be able to withdraw.');
+                                }
+                              },
+                              child: const Transaction(
+                                color: AppColor.shade5,
+                                image: 'assets/withdraw.png',
+                                text: 'Withdraw',
                               ),
                             );
                           }
                           return Container();
                         },
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            'Good day, Remember to save today',
-                            style: MyText.mobileMd(),
-                          ),
-                          Image.asset('assets/money.png')
-                        ],
-                      ),
                     ],
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 3, color: AppColor.secondaryColor),
-                        shape: BoxShape.circle),
-                    height: 50.h,
-                    width: 50.h,
-                    child: Center(
-                      child: Text(
-                        'OA',
-                        style: MyText.bodyLg(),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Height(20.h),
-              SizedBox(
-                height: 140.h,
-                width: double.maxFinite,
-                child: CarouselSlider.builder(
-                    itemCount: 2,
-                    controller: controller.carouselController,
-                    autoSliderTransitionTime: const Duration(milliseconds: 500),
-                    // unlimitedMode: true,
-                    viewportFraction: 0.9,
-                    initialPage: 0,
-                    onSlideChanged: (value) => controller.togglePage(value),
-                    slideTransform: const ForegroundToBackgroundTransform(),
-                    slideBuilder: (index) {
-                      return controller.carousel[index];
-                    }),
-              ),
-              Height(20.h),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:
-                      List.generate(2, (index) => dotContainer(index, context)),
-                ),
-              ),
-              Height(20.h),
-              Row(
-                children: [
+                  Height(20.h),
+                  Text(
+                    'Get your money working for you',
+                    style: MyText.mobile(),
+                  ),
+                  Height(15.h),
                   InkWell(
                     onTap: () {
-                      print('ppp');
-                      RemoteDatabase remoteDatabase = RemoteDatabase();
-                      remoteDatabase.sendPushNotification(
-                          'eaiLQvQyTAOS1YlxfWGeUV:APA91bEsE_aXRheVjLI0Oa6X8i5gNsQL25FzRkO38ZtXFuevCgZK1ZzljrRya_0SLorC20Wy2Pbr-zIufYGFC1s-rlvBUrIdMx0QG6X8xvn2Nq8L7P4F3fR89WgBmtKQAdv3i5SxJ3hP',
-                          'Credit',
-                          'You have Successfully Received  from ');
+                      currentIndex.value = 1;
                     },
-                    child: const Transaction(
-                      color: AppColor.shade4,
-                      image: 'assets/add.png',
-                      text: 'Add money',
+                    child: const SavingsCard(
+                      color: AppColor.primaryColor,
+                      icon: Icons.wallet,
+                      text: 'Save for an Emergency',
                     ),
                   ),
-                  Width(20.w),
-                  const Transaction(
-                    color: AppColor.shade5,
-                    image: 'assets/withdraw.png',
-                    text: 'Withdraw',
+                  Height(10.h),
+                  InkWell(
+                    onTap: () {
+                      currentIndex.value = 2;
+                    },
+                    child: const SavingsCard(
+                      color: AppColor.primaryColor,
+                      icon: Icons.pie_chart,
+                      text: 'Manage your Expenses',
+                    ),
                   ),
+                  Height(20.h),
+                  Text(
+                    'Ways to earn more money',
+                    style: MyText.mobile(),
+                  ),
+                  Height(15.h),
+                  const SavingsCard(
+                      icon: Icons.people,
+                      text: 'Invite your friends and get more money',
+                      color: AppColor.complementaryColor1)
                 ],
               ),
-              Height(20.h),
-              Text(
-                'Get your money working for you',
-                style: MyText.mobile(),
-              ),
-              Height(15.h),
-              const SavingsCard(
-                color: AppColor.primaryColor,
-                icon: Icons.wallet,
-                text: 'Save for an Emergency',
-              ),
-              Height(10.h),
-              const SavingsCard(
-                color: AppColor.primaryColor,
-                icon: Icons.pie_chart,
-                text: 'Manage your Expenses',
-              ),
-              Height(20.h),
-              Text(
-                'Ways to earn more money',
-                style: MyText.mobile(),
-              ),
-              Height(15.h),
-              const SavingsCard(
-                  icon: Icons.people,
-                  text: 'Invite your friends and get more money',
-                  color: AppColor.complementaryColor1)
-            ],
-          ),
+            ),
+          )),
         ),
-      )),
+      ),
     );
   }
 

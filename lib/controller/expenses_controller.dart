@@ -7,6 +7,7 @@ import 'package:at_save/view/screens/expenses_view.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../model/budget.dart';
 import '../model/expense.dart';
@@ -169,6 +170,12 @@ class ExpensesController extends State<ExpensesScreen> {
     });
   }
 
+  notLoading() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   /// widget to build the indicators for all the colors with their respective category
   List<Widget> buildColorIndicators(List<Budget> budgets) {
     List<Widget> indicators = [];
@@ -267,6 +274,7 @@ class ExpensesController extends State<ExpensesScreen> {
     return color.value;
   }
 
+  ///it takes the color integer and converts it to its repective color
   Color getColor(int colorValue) {
     return Color(colorValue);
   }
@@ -278,5 +286,9 @@ class ExpensesController extends State<ExpensesScreen> {
       totalExpenses += expense.amount;
     }
     return totalExpenses;
+  }
+
+  pushError() {
+    context.go('/error', extra: 'Error creating budget');
   }
 }

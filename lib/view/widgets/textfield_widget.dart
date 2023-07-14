@@ -25,7 +25,7 @@ class _TextfieldWidgetState extends State<TextfieldWidget> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      // enabled: widget.textFieldType == 'date' ? false : true,
+      enabled: widget.textFieldType == 'date' ? false : true,
       controller: widget.controller,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: ValidationBuilder().required().build(),
@@ -36,24 +36,24 @@ class _TextfieldWidgetState extends State<TextfieldWidget> {
           ? TextInputType.number
           : TextInputType.text,
       decoration: InputDecoration(
-        suffixIcon: Container(
-          height: 15,
-          width: 15,
-          margin: const EdgeInsets.only(right: 8, top: 5, bottom: 5),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: const Color.fromARGB(255, 238, 236, 236)),
-          child: widget.textFieldType == 'date'
-              ? IconButton(
-                  onPressed: () {
-                    widget.setDate!();
-                  },
-                  icon: const Icon(
-                    Icons.calendar_month,
-                    color: AppColor.secondaryColor,
-                  ))
-              : Container(),
-        ),
+        // suffixIcon: Container(
+        //   height: 15,
+        //   width: 15,
+        //   margin: const EdgeInsets.only(right: 8, top: 5, bottom: 5),
+        //   decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.circular(30),
+        //       color: const Color.fromARGB(255, 238, 236, 236)),
+        //   child: widget.textFieldType == 'date'
+        //       ? IconButton(
+        //           onPressed: () {
+        //             widget.setDate!();
+        //           },
+        //           icon: const Icon(
+        //             Icons.calendar_month,
+        //             color: AppColor.secondaryColor,
+        //           ))
+        //       : Container(),
+        // ),
         hintStyle: MyText.mobileMd(),
         hintText: widget.hintText,
         filled: true,

@@ -16,6 +16,7 @@ class Splash extends StatefulWidget {
 
 class SplashController extends State<Splash> {
   //initializing local settings to acess device settings
+  SessionManager manager = SessionManager();
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -33,12 +34,13 @@ class SplashController extends State<Splash> {
   void dispose() {
     super.dispose();
   }
+
 //get the device token from shared preferences
   getMytoken() async {
-    SessionManager manager = SessionManager();
     var token = await manager.getMessagingToken();
     print(token);
   }
+
 //delay the splash screen
   wait() async {
     await Future.delayed(const Duration(seconds: 2), () async {
@@ -47,7 +49,8 @@ class SplashController extends State<Splash> {
       ));
     });
   }
-/// handles getting permission from user for app to acces device notification
+
+  /// handles getting permission from user for app to acces device notification
   void requestPermission() async {
     FirebaseMessaging message = FirebaseMessaging.instance;
     NotificationSettings settings = await message.requestPermission(
@@ -60,7 +63,7 @@ class SplashController extends State<Splash> {
         sound: true);
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');  //when the user accepts the prompt
+      print('User granted permission'); //when the user accepts the prompt
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
       print('User granted provisional authorization');
@@ -68,9 +71,9 @@ class SplashController extends State<Splash> {
       print('User declined');
     }
   }
+
 // hanldes getting the device toe\ken from the device and saving the token in shared preferences
   void getToken() async {
-    SessionManager manager = SessionManager();
     await FirebaseMessaging.instance.getToken().then((value) {
       print(value);
       manager.saveMessagingToken(value!);
@@ -130,7 +133,8 @@ class SplashController extends State<Splash> {
       print('Body: ${initialMessage.notification?.body}');
     }
   }
-/// displays the notificstion even when the app is in foreground
+
+  /// displays the notificstion even when the app is in foreground
   Future<void> displayNotification(RemoteMessage message) async {
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'channel_id',
@@ -154,7 +158,13 @@ class SplashController extends State<Splash> {
 
   delay() async {
     await Future.delayed(const Duration(seconds: 2), () async {
-      context.go('/onBoarding');
+      bool? status = await manager.seenOnboardingScreen();
+      if (status == true) {
+        context.go('/welcome');
+      } else {
+        context.go('/onBoarding');
+      }
+
       // Navigator.of(context).pushReplacement(MaterialPageRoute(
       //   builder: (context) => const OnboardingScreen(),
       // ));

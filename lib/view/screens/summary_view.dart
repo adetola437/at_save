@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 
 import '../../bloc/target/target_bloc.dart';
+import '../../bloc/user/user_bloc.dart';
 import '../../boiler_plate/stateless_view.dart';
 import '../../controller/summary_controller.dart';
-import '../../price_format.dart';
+import '../../utils/price_format.dart';
 import '../../theme/colors.dart';
 import '../../theme/text.dart';
 import '../widgets/description_text.dart';
@@ -69,14 +71,22 @@ class SummaryView extends StatelessView<SummaryScreen, SummaryController> {
                 },
                 child: SizedBox(
                     width: 140.w, child: const OutlineButton(text: 'Cancel'))),
-            InkWell(
-                onTap: () {
-                  Navigator.of(context)
-                      .pop(true); // Return true when create is pressed
+            BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                if (state is UserSuccess) {
+                  return InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pop(true); // Return true when create is pressed
 
-                  controller.createGoal();
-                },
-                child: SizedBox(width: 140.w, child: Button(text: 'Create')))
+                        controller.createGoal(state.user.walletBalance!);
+                      },
+                      child: SizedBox(
+                          width: 140.w, child: Button(text: 'Create')));
+                }
+                return Container();
+              },
+            )
           ],
         );
       },
@@ -114,7 +124,11 @@ class SummaryView extends StatelessView<SummaryScreen, SummaryController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Height(10.h),
-                  NavContainer(icon: Icons.arrow_back_ios),
+                  InkWell(
+                      onTap: () {
+                        context.pop();
+                      },
+                      child: NavContainer(icon: Icons.arrow_back_ios)),
                   Height(10.h),
                   const Heading(text: 'Summary'),
                   Height(10.h),

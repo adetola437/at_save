@@ -1,4 +1,4 @@
-import 'package:at_save/price_format.dart';
+import 'package:at_save/utils/price_format.dart';
 import 'package:isar/isar.dart';
 
 part 'savings_goal.g.dart';

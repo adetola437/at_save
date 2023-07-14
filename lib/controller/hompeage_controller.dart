@@ -2,6 +2,7 @@ import 'package:at_save/view/screens/homepage_view.dart';
 import 'package:at_save/view/widgets/carousel_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
+import 'package:go_router/go_router.dart';
 
 import '../theme/colors.dart';
 
@@ -15,18 +16,19 @@ class HomeScreen extends StatefulWidget {
 class HomeController extends State<HomeScreen> {
   CarouselSliderController carouselController = CarouselSliderController();
   int currentIndex = 0;
-  List<CarouselWidget> carousel = [
-     CarouselWidget(
-      amount: 50000,
-      title: 'Total Savings',
-      color: AppColor.primaryColor,
-    ),
-     CarouselWidget(
-      amount: 20000,
-      title: 'Expenses',
-      color: AppColor.complementaryColor1,
-    )
-  ];
+  bool isLoading = false;
+  // List<CarouselWidget> carousel = [
+  //    CarouselWidget(
+  //     amount: 50000,
+  //     title: 'Total Savings',
+  //     color: AppColor.primaryColor,
+  //   ),
+  //    CarouselWidget(
+  //     amount: 20000,
+  //     title: 'Expenses',
+  //     color: AppColor.complementaryColor1,
+  //   )
+  // ];
   @override
   void initState() {
     super.initState();
@@ -45,4 +47,31 @@ class HomeController extends State<HomeScreen> {
       currentIndex = value;
     });
   }
+
+  goToWithdraw() {
+    context.push('/withdraw');
+  }
+
+  loading() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+  notLoading() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+ String getInitials(String fullName) {
+  final nameParts = fullName.split(' ');
+  final firstName = nameParts[0].trim();
+
+  if (nameParts.length > 1) {
+    final lastName = nameParts[nameParts.length - 1].trim();
+    return '${firstName[0]}${lastName[0]}';
+  } else {
+    return firstName[0];
+  }
+}
+
 }

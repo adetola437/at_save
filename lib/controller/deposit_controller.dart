@@ -34,21 +34,25 @@ class DepositController extends State<DepositScreen> {
 
   @override
   Widget build(BuildContext context) => DepositView(this);
-///Callback function to update the current value of the selected option of the dropdown widget
+
+  ///Callback function to update the current value of the selected option of the dropdown widget
   onChanged(value) {
     setState(() {
       selectedOption = value;
     });
   }
+
 //handles loading
- void loading() {
+  void loading() {
     setState(() {
       isLoading = true;
     });
   }
-///handles the user adding money to his wallet account
- void deposit() {
-    if (formKey.currentState!.validate()) {  //Validating the textfields
+
+  ///handles the user adding money to his wallet account
+  void deposit() {
+    if (formKey.currentState!.validate()) {
+      //Validating the textfields
       context.read<ExpenseTransactionBloc>().add(CreateExpenseTransaction(
           description: descriptionController.text,
           amount: double.parse(amountController.text),
@@ -58,13 +62,18 @@ class DepositController extends State<DepositScreen> {
           transactionType: 'deposit'));
     }
   }
-///This is the action trigered when the action deposit is successful to go to the success page
+
+  ///This is the action trigered when the action deposit is successful to go to the success page
   pushSuccess() {
     // Navigator.of(context).pushReplacement(MaterialPageRoute(
     //   builder: (context) => const SuccessScreen(
     //     text: 'You have Successfully Deposited your funds',  //Text displayed in success screen.
     //   ),
     // ));
-     context.go('/success', extra: 'You have successfully deposited your funds');
+    context.go('/success', extra: 'You have successfully deposited your funds');
+  }
+
+  pushError() {
+    context.go('/error', extra: 'Error depositing funds');
   }
 }

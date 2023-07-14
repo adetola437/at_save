@@ -1,7 +1,8 @@
+import 'package:at_save/repository/repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import '../../auth_repository.dart';
+import '../../repository/auth_repository.dart';
 import '../../shared_preferences/session_manager.dart';
 
 part 'authentication_event.dart';
@@ -19,7 +20,17 @@ class AuthenticationBloc
     on<EmailSignInEvent>(
       (event, emit) => _emailSignIn(event, emit), //Action on user sign in
     );
+    on<LogOutEvent>(
+      (event, emit) => _logOut(event, emit),
+    );
   }
+}
+
+_logOut(LogOutEvent event, emit) async {
+  emit(AuthenticationLoading());
+  Repository repo = Repository();
+  await repo.signOut();
+  emit(LogOutSuccessful());
 }
 
 ///Method used to implement user sign up

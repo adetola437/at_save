@@ -1,3 +1,4 @@
+import 'package:at_save/shared_preferences/session_manager.dart';
 import 'package:at_save/view/screens/onboarding_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +14,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class OnboardingController extends State<OnboardingScreen> {
+  SessionManager manager = SessionManager();
   @override
   void initState() {
     super.initState();
@@ -22,6 +24,7 @@ class OnboardingController extends State<OnboardingScreen> {
   void dispose() {
     super.dispose();
   }
+
 //declaring variables
   bool lastPage = false;
   int currentIndex = 0;
@@ -77,9 +80,11 @@ class OnboardingController extends State<OnboardingScreen> {
       lastPage = value == 2;
     });
   }
+
 //Push the homescreen
-  pushWelcomeScreen() {
+  pushWelcomeScreen() async {
     context.go('/welcome');
+    await manager.saveIfSeen(true);
     // Navigator.of(context).pushReplacement(MaterialPageRoute(
     //   builder: (context) => const WelcomeScreen(),
     // ));

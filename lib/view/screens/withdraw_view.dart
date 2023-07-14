@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 
 import '../../bloc/budget/budget_bloc.dart';
 import '../../bloc/expense_transaction/expense_transaction_bloc.dart';
+import '../../bloc/user/user_bloc.dart';
 import '../../boiler_plate/stateless_view.dart';
 import '../../controller/withdraw_controller.dart';
 import '../../theme/colors.dart';
@@ -35,6 +37,10 @@ class WithdrawView extends StatelessView<WithdrawScreen, WithdrawController> {
           if (state is ExpenseTransactionCreated) {
             controller.pushSuccess();
           }
+          if (state is ExpenseTransactionError) {
+            controller.pushError();
+          }
+
           // TODO: implement listener
         },
         child: Scaffold(
@@ -47,12 +53,17 @@ class WithdrawView extends StatelessView<WithdrawScreen, WithdrawController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 30.h),
-                    child: SizedBox(
-                      height: 30.h,
-                      width: 30.w,
-                      child: SvgPicture.asset('assets/cancel.svg'),
+                  InkWell(
+                    onTap: () {
+                      context.pop();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 30.h),
+                      child: SizedBox(
+                        height: 30.h,
+                        width: 30.w,
+                        child: SvgPicture.asset('assets/cancel.svg'),
+                      ),
                     ),
                   ),
                   Height(40.h),
@@ -116,11 +127,18 @@ class WithdrawView extends StatelessView<WithdrawScreen, WithdrawController> {
                     },
                   ),
                   Height(190.h),
-                  InkWell(
-                      onTap: () {
-                        controller.withdraw();
-                      },
-                      child: Button(text: 'Withdraw'))
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      if (state is UserSuccess) {
+                        return InkWell(
+                            onTap: () {
+                              controller.withdraw(state.user.walletBalance!);
+                            },
+                            child: Button(text: 'Withdraw'));
+                      }
+                      return Container();
+                    },
+                  )
                 ],
               ),
             ))),

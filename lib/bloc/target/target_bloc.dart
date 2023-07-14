@@ -1,5 +1,5 @@
 import 'package:at_save/model/savings_goal.dart';
-import 'package:at_save/repository.dart';
+import 'package:at_save/repository/repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -16,8 +16,26 @@ class TargetBloc extends Bloc<TargetEvent, TargetState> {
 }
 
 _createTarget(CreateTargetEvent event, emit) async {
+  // var connectivityResult = await Connectivity().checkConnectivity();
   emit(TargetLoading());
   Repository repo = Repository();
+  SavingsGoal goal = SavingsGoal(
+      currentAmount: event.currentAmount,
+      createdDate: DateTime.now(),
+      id: '',
+      title: event.title,
+      targetAmount: event.targetAmount,
+      targetDate: event.targetDate,
+      description: event.description);
+  // if (connectivityResult == ConnectivityResult.none) {
+  //   try {
+  //     await repo.createLocalGoal(goal);
+  //     repo.createGoal(goal);
+  //     emit(TargetLoaded());
+  //   } catch (e) {
+  //     emit(TargetError());
+  //   }
+  // }
   try {
     SavingsGoal goal = SavingsGoal(
         currentAmount: event.currentAmount,
@@ -27,9 +45,13 @@ _createTarget(CreateTargetEvent event, emit) async {
         targetAmount: event.targetAmount,
         targetDate: event.targetDate,
         description: event.description);
-    await repo.createGoal(goal);
+    bool status = await repo.createGoal(goal);
     //emit(TargetError());
-    emit(TargetLoaded());
+    if (status == true) {
+      emit(TargetLoaded());
+    } else {
+      emit(TargetError());
+    }
   } catch (e) {
     emit(TargetError());
     print(e);

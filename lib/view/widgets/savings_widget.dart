@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../controller/details_controller.dart';
-import '../../price_format.dart';
+import '../../utils/price_format.dart';
 import '../../theme/colors.dart';
 import '../../theme/text.dart';
 import 'height.dart';

@@ -18,8 +18,7 @@ class RemoteDatabase {
 
   SessionManager manager = SessionManager();
 //Get the current logged in user
-
-
+  ///Gets a user by their id from firebase
   Future<User> getUser() async {
     String? userId = await manager.getUid();
     try {
@@ -38,8 +37,9 @@ class RemoteDatabase {
   }
 
 //Create a new goal
-  Future saveGoal(SavingsGoal goal) async {
+  Future<bool> saveGoal(SavingsGoal goal) async {
     String? uid = await manager.getUid();
+    String? token = await manager.getMessagingToken();
     try {
       final CollectionReference transactionCollection =
           FirebaseFirestore.instance.collection('goals');
@@ -68,13 +68,18 @@ class RemoteDatabase {
           note: 'Wallet Created',
           savingsGoalId: docRef.id);
       await createSavingsTransaction(transaction);
+      sendPushNotification(token!, 'Congratulations!!!',
+          'You have Successfully created your goal ${goal.title}');
 
       print('Transaction saved successfully!');
+      return true;
     } catch (error) {
-      print('Error saving transaction: $error');
+      return false;
+      //  print('Error saving transaction: $error');
     }
   }
 
+  /// takesa an amount and adds it tothe total savings in the user model
   Future addToUserTotalSavingsBalance(double amount) async {
     try {
       String? uid = await manager.getUid();
@@ -241,6 +246,9 @@ class RemoteDatabase {
         changeSavingsStatus(id, 'Completed');
         sendPushNotification(token!, 'Congratulations!!!',
             'You have Successfully completed your savings for $title');
+      } else {
+        sendPushNotification(token!, 'Transaction Successful',
+            'You have Successfully added $amount to you savings');
       }
 
       double currentSavings = savingsBalance + amount;
@@ -286,14 +294,15 @@ class RemoteDatabase {
     try {
       await removeFromSavingsBalance(amount, id);
       await removeFromUserTotalSavingsBalance(amount);
-     await changeSavingsStatus(id, 'Terminated');
+      await changeSavingsStatus(id, 'Terminated');
       await addToWalletBalance(amount, id);
     } catch (e) {
       print(e);
     }
   }
 
-  Future<bool> deleteGoal(String id, double amount) async {
+  Future deleteGoal(String id, double amount) async {
+    String? token = await manager.getMessagingToken();
     try {
       String? uid = await manager.getUid();
       final DocumentReference goalRef = FirebaseFirestore.instance
@@ -302,13 +311,16 @@ class RemoteDatabase {
           .collection('my_goals')
           .doc(id);
 
-      await goalRef.delete();
       await breakSavings(id, amount);
+      await goalRef.delete();
+
       await deleteAllTransactions(id);
-      return true;
+      sendPushNotification(token!, 'Congratulations!!!',
+          'You have Successfully broken your savings, kindly check your funds in your wallet balance');
+
       //print('Goal deleted successfully!');
     } catch (e) {
-      return false;
+      print(e);
       //print('Error Deleting goal');
     }
   }
@@ -368,8 +380,9 @@ class RemoteDatabase {
     }
   }
 
-  Future updateSavings(String id, String title, String description,
+  Future<bool> updateSavings(String id, String title, String description,
       double targetAmount, DateTime date) async {
+    String? token = await manager.getMessagingToken();
     print(id);
 
     try {
@@ -386,8 +399,11 @@ class RemoteDatabase {
         'target_amount': targetAmount,
         'target_date': formatDateToString(date)
       });
+      sendPushNotification(token!, 'Update Successful',
+          'You have Successfully updated your savings details');
+      return true;
     } catch (e) {
-      print(e);
+      return false;
     }
   }
 
@@ -398,6 +414,7 @@ class RemoteDatabase {
 
   Future createBudget(Budget budget) async {
     String? uid = await manager.getUid();
+    String? token = await manager.getMessagingToken();
     print('creating');
     try {
       final CollectionReference reference =
@@ -407,6 +424,8 @@ class RemoteDatabase {
           .collection('my_budgets')
           .doc(budget.name)
           .set(budget.toJson());
+      sendPushNotification(token!, 'Budget Created',
+          'You have Successfully created ${budget.name} budget');
     } catch (e) {
       print(e);
     }
@@ -442,6 +461,7 @@ class RemoteDatabase {
     Expense expense,
   ) async {
     String? uid = await manager.getUid();
+    String? token = await manager.getMessagingToken();
 
     try {
       final CollectionReference transactionCollection =
@@ -465,8 +485,12 @@ class RemoteDatabase {
       if (expense.transactionType == 'withdraw') {
         await removeFromWalletBalance(expense.amount);
         await addMoneyToBudget(expense.amount, expense.category);
+        sendPushNotification(token!, 'Withdraw Successful',
+            'You have Successfully withdrawn ${expense.amount} from your wallet for ${expense.category}');
       } else {
         await addToWalletBalance(expense.amount, '');
+        sendPushNotification(token!, 'Deposit Successful',
+            'You have Successfully deposited ${expense.amount} into your wallet.');
       }
 
       print('Expense saved successfully!');
@@ -503,6 +527,7 @@ class RemoteDatabase {
   Future addMoneyToBudget(double amount, String budgetName) async {
     // log(id);
     String? uid = await manager.getUid();
+    String? token = await manager.getMessagingToken();
     try {
       final userRef = FirebaseFirestore.instance
           .collection('budgets')
@@ -515,10 +540,16 @@ class RemoteDatabase {
       final savingsData = savingsSnapshot.data();
       if (savingsData != null) {
         double budgetBalance = savingsData['currentAmount'].toDouble();
+        double budgetTarget = savingsData['amount'].toDouble();
 
         double currentBalance = budgetBalance + amount;
 
         await userRef.update({'currentAmount': currentBalance});
+
+        if (currentBalance >= budgetTarget) {
+          sendPushNotification(token!, 'Budget Exceeded',
+              'You have reached your budget Limit, kindly watch your spending');
+        }
       }
     } catch (e) {}
   }
@@ -531,7 +562,7 @@ class RemoteDatabase {
     final headers = {
       'Content-Type': 'application/json',
       'Authorization':
-          'Bearer ya29.a0AbVbY6O5hRbnF1yTuhbYcTIQhTIkiVCHkJ3dYcYcJo7WSf2PC9YBSyL_nDvH3bwjgG-acF-ZEur1UDOypz7ivHZborDSOeOsmwVul7PT_IOTrbhhYF5iA64ag30k33Kaax1Inv80Cte1msnEIQjw1WqPHe2XZMkaCgYKASoSARASFQFWKvPlqOfeBLNY530lNo82hSae9A0166',
+          'Bearer ya29.a0AbVbY6OjfM0lkx0LKYPotjgo5qMLYL6IRqN-KRJIRaq-E5zj4MB1i5XJ0O4rQmxBLrh6gq5vs-buPSdUbMwW8NikDzqmd6V9h0r35uJ4cN8ehvT1BI8a8wZsrTHlDEsOFLV5Tj2GU1-LVemnHu5Gb4u2Dan479nGaCgYKASESARASFQFWKvPlsQxaEouc23-NiGRq_qQEcA0167',
     };
 
     final message = {

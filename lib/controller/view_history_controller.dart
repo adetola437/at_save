@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../view/screens/history_view.dart';
 
 class HistoryScreen extends StatefulWidget {
+  /// unique id of a goal
   final String id;
   const HistoryScreen({required this.id, super.key});
 

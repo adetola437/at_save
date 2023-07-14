@@ -16,7 +16,7 @@ import 'package:at_save/model/savings_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'controller/sign_up_controller.dart';
+import '../controller/sign_up_controller.dart';
 
 final GoRouter router = GoRouter(
   debugLogDiagnostics: true,

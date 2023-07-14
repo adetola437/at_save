@@ -1,6 +1,6 @@
 import 'package:at_save/bloc/goals/goals_bloc.dart';
 import 'package:at_save/model/savings_goal.dart';
-import 'package:at_save/price_format.dart';
+import 'package:at_save/utils/price_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -117,4 +117,13 @@ class EditController extends State<EditScreen> {
   deleteError() {
     context.go('/error', extra: 'Error deleting goal');
   }
+  //on edit error, the error screen is called
+   editError() {
+    context.go('/error', extra: 'Error editing your goal');
+  }
+   breakError() {
+    context.go('/error', extra: 'Error breaking your goal');
+  }
+
+ 
 }

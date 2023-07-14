@@ -1,7 +1,6 @@
-import 'package:at_save/price_format.dart';
+import 'package:at_save/utils/price_format.dart';
 import 'package:at_save/theme/colors.dart';
 import 'package:at_save/theme/text.dart';
-import 'package:at_save/view/widgets/header_row.dart';
 import 'package:at_save/view/widgets/height.dart';
 import 'package:at_save/view/widgets/savings_action.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 
 import '../../bloc/goals/goals_bloc.dart';
@@ -71,6 +71,7 @@ class DetailsView extends StatelessView<DetailsScreen, DetailsController> {
               print('state deleted');
               controller.success();
             }
+
             if (state is GoalsLoadingError) {
               controller.deleteError();
               controller.notLoading();
@@ -89,10 +90,21 @@ class DetailsView extends StatelessView<DetailsScreen, DetailsController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Height(10.h),
-                        const HeaderRow(
-                            leading: Icons.arrow_back_ios,
-                            text: '',
-                            trailing: Icons.notifications_none),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  context.pop();
+                                },
+                                icon: const Icon(Icons.arrow_back_ios)),
+                            // Width(100.w),
+                            Text(
+                              'Details',
+                              style: MyText.bodyLg(),
+                            )
+                          ],
+                        ),
                         Height(20.h),
                         Container(
                           height: 100.h,

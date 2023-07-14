@@ -39,6 +39,13 @@ class EditView extends StatelessView<EditScreen, EditController> {
           if (state is GoalsLoadingError) {
             controller.deleteError();
           }
+           if (state is GoalBreakError) {
+            controller.deleteError();
+          }
+          
+          if (state is GoalEditError) {
+            controller.editError();
+          }
         },
         child: Scaffold(
           body: Form(
@@ -82,13 +89,27 @@ class EditView extends StatelessView<EditScreen, EditController> {
                     Height(20.h),
                     const Head(text: 'Duration'),
                     Height(10.h),
-                    TextfieldWidget(
-                        setDate: () {
-                          controller.selectDate(context);
-                        },
-                        textFieldType: 'date',
-                        controller: controller.dateController,
-                        hintText: 'date'),
+                    SizedBox(
+                      child: Stack(
+                        children: [
+                          TextfieldWidget(
+                              setDate: () {
+                                controller.selectDate(context);
+                              },
+                              textFieldType: 'date',
+                              controller: controller.dateController,
+                              hintText: 'date'),
+                          Positioned(
+                            left: 280.w,
+                            child: IconButton(
+                                onPressed: () {
+                                  controller.selectDate(context);
+                                },
+                                icon: const Icon(Icons.calendar_month)),
+                          )
+                        ],
+                      ),
+                    ),
                     Height(30.h),
                     InkWell(
                         onTap: () {

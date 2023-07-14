@@ -24,7 +24,7 @@ class AddMoneyView extends StatelessView<AddMoneyScreen, AddMoneyController> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Confirm Target Savings',
+            'Add funds to savings',
             style: MyText.bodyBold(),
           ),
           content: SingleChildScrollView(
@@ -49,7 +49,7 @@ class AddMoneyView extends StatelessView<AddMoneyScreen, AddMoneyController> {
                   Height(30.h),
                   SizedBox(
                     child: Text(
-                      'Are you sure you want to create this target savings?',
+                      'Are you sure ?',
                       style: MyText.bodySm(),
                     ),
                   ),
@@ -100,6 +100,9 @@ class AddMoneyView extends StatelessView<AddMoneyScreen, AddMoneyController> {
         if (state is GoalsLoading) {
           controller.loading();
         }
+        if (state is GoalTopUpError) {
+            controller.topUpError();
+          }
       },
       child: OverlayLoaderWithAppIcon(
         isLoading: controller.isLoading,

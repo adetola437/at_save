@@ -1,9 +1,12 @@
-import 'package:at_save/price_format.dart';
 import 'package:at_save/theme/colors.dart';
 import 'package:at_save/theme/text.dart';
+import 'package:at_save/utils/price_format.dart';
 import 'package:at_save/view/widgets/height.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../bloc/visibility/visibility_bloc.dart';
 
 class CarouselWidget extends StatelessWidget {
   String title;
@@ -57,9 +60,19 @@ class CarouselWidget extends StatelessWidget {
                   color: const Color.fromARGB(255, 231, 231, 236)),
             ),
             Height(10.h),
-            Text(
-              'N${PriceFormatter.formatPrice(amount)}',
-              style: MyText.balanceLg(color: AppColor.backBackground),
+            BlocBuilder<VisibilityBloc, VisibilityState>(
+              builder: (context, state) {
+                if (state is VisibilityLoaded) {
+                  return state.visible
+                      ? const Text('******')
+                      : Text(
+                          'N${PriceFormatter.formatPrice(amount)}',
+                          style:
+                              MyText.balanceLg(color: AppColor.backBackground),
+                        );
+                }
+                return Container();
+              },
             ),
           ],
         ),

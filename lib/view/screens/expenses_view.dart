@@ -1,6 +1,6 @@
-import 'package:at_save/price_format.dart';
 import 'package:at_save/theme/colors.dart';
 import 'package:at_save/theme/text.dart';
+import 'package:at_save/utils/price_format.dart';
 import 'package:at_save/view/widgets/budgetWidget.dart';
 import 'package:at_save/view/widgets/header_row.dart';
 import 'package:at_save/view/widgets/height.dart';
@@ -31,6 +31,15 @@ class ExpensesView extends StatelessView<ExpensesScreen, ExpensesController> {
       child: BlocListener<BudgetBloc, BudgetState>(
         listener: (context, state) {
           // TODO: implement listener
+          if (state is BudgetLoading) {
+            controller.loading();
+          }
+          if (state is BudgetLoaded) {
+            controller.notLoading();
+          }
+          if (state is BudgetLoadingError) {
+            controller.pushError();
+          }
         },
         child: Scaffold(
           floatingActionButton: FloatingActionButton(
@@ -134,9 +143,13 @@ class ExpensesView extends StatelessView<ExpensesScreen, ExpensesController> {
                                         builder: (context, state) {
                                           if (state
                                               is ExpenseTransactionLoaded) {
-                                            double amount =
-                                                controller.getTotalExpenses(
-                                                    state.expenses);
+                                            double amount = controller
+                                                .getTotalExpenses(state.expenses
+                                                    .where((element) =>
+                                                        element
+                                                            .transactionType ==
+                                                        'withdraw')
+                                                    .toList());
 
                                             return Text(
                                               'N${PriceFormatter.formatPrice(amount)}',
@@ -185,12 +198,27 @@ class ExpensesView extends StatelessView<ExpensesScreen, ExpensesController> {
                     child: BlocBuilder<BudgetBloc, BudgetState>(
                       builder: (context, state) {
                         if (state is BudgetLoaded) {
-                          return ListView.builder(
-                              itemCount: state.budget.length,
-                              itemBuilder: (ctx, index) {
-                                return BudgetWidget(
-                                    budget: state.budget[index]);
-                              });
+                          return state.budget.isEmpty
+                              ? Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 250.h,
+                                      width: 300.w,
+                                      child:
+                                          Image.asset('assets/no expenses.png'),
+                                    ),
+                                    Text(
+                                      'You have no expense budget at the moment',
+                                      style: MyText.mobile(),
+                                    )
+                                  ],
+                                )
+                              : ListView.builder(
+                                  itemCount: state.budget.length,
+                                  itemBuilder: (ctx, index) {
+                                    return BudgetWidget(
+                                        budget: state.budget[index]);
+                                  });
                         }
                         return Container();
                       },

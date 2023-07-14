@@ -37,11 +37,11 @@ class ErrorController extends State<ErrorScreen> {
     // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
     //   return const LandingScreen();
     // }));
-    context.read<UserBloc>().add(FetchUserEvent());
-    context.read<GoalsBloc>().add(GetGoalsEvent());
+    context.read<UserBloc>().add(FetchUserEvent());  //fetches all the user data firebase or isar depending on network connection
+    context.read<GoalsBloc>().add(GetGoalsEvent());//fetches all the goal data from firebase or isar depending on network connection
 
-    context.read<SavingsTransactionsBloc>().add(FetchSavingsTransactions());
-    context.read<BudgetBloc>().add(FetchBudgetEvent());
-    context.read<ExpenseTransactionBloc>().add(FetchExpenseTransaction());
+    context.read<SavingsTransactionsBloc>().add(FetchSavingsTransactions()); //fetches all the savings transaction data from firebase or isar depending on network connection
+    context.read<BudgetBloc>().add(FetchBudgetEvent()); //fetch all budgets from isar or firebase
+    context.read<ExpenseTransactionBloc>().add(FetchExpenseTransaction()); // fetches all expenses transaction
   }
 }

@@ -1,12 +1,17 @@
-import 'package:at_save/price_format.dart';
+import 'package:at_save/model/expense.dart';
 import 'package:at_save/theme/colors.dart';
 import 'package:at_save/theme/text.dart';
+import 'package:at_save/utils/price_format.dart';
 import 'package:at_save/view/widgets/expense_widget.dart';
 import 'package:at_save/view/widgets/height.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
+import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 
+import '../../bloc/budget/budget_bloc.dart';
 import '../../bloc/expense_transaction/expense_transaction_bloc.dart';
 import '../../bloc/user/user_bloc.dart';
 import '../../boiler_plate/stateless_view.dart';
@@ -90,15 +95,28 @@ class StatisticsView
                     ),
                   ),
                   Width(30.w),
-                  InkWell(
-                    onTap: () {
-                      controller.pushWithdraw();
+                  BlocBuilder<BudgetBloc, BudgetState>(
+                    builder: (context, state) {
+                      if (state is BudgetLoaded) {
+                        return InkWell(
+                          onTap: () {
+                            if (state.budget.isNotEmpty) {
+                              controller.pushWithdraw();
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg:
+                                      'You need to create a budget to be able to withdraw.');
+                            }
+                          },
+                          child: const Transaction(
+                            color: AppColor.shade5,
+                            image: 'assets/withdraw.png',
+                            text: 'Withdraw',
+                          ),
+                        );
+                      }
+                      return Container();
                     },
-                    child: const Transaction(
-                      color: AppColor.shade5,
-                      image: 'assets/withdraw.png',
-                      text: 'Withdraw',
-                    ),
                   ),
                 ],
               ),
@@ -113,19 +131,73 @@ class StatisticsView
                     style: MyText.bodyBold(),
                   ),
                 ),
+                // SizedBox(
+                //   height: 300.h,
+                //   width: 370.w,
+                //   child: BlocBuilder<ExpenseTransactionBloc,
+                //       ExpenseTransactionState>(
+                //     builder: (context, state) {
+                //       if (state is ExpenseTransactionLoaded) {
+                //         return ListView.builder(
+                //             itemCount: state.expenses.length,
+                //             itemBuilder: (ctx, index) {
+                //               return ExpenseWidget(
+                //                   expense: state.expenses[index]);
+                //             });
+                //       }
+                //       return Container();
+                //     },
+                //   ),
+                // )
                 SizedBox(
-                  height: 300.h,
+                  height: 350.h,
                   width: 370.w,
                   child: BlocBuilder<ExpenseTransactionBloc,
                       ExpenseTransactionState>(
                     builder: (context, state) {
                       if (state is ExpenseTransactionLoaded) {
-                        return ListView.builder(
-                            itemCount: state.expenses.length,
-                            itemBuilder: (ctx, index) {
-                              return ExpenseWidget(
-                                  expense: state.expenses[index]);
-                            });
+                        return state.expenses.isEmpty
+                            ? Column(
+                                children: [
+                                  SizedBox(
+                                    height: 300.h,
+                                    width: 300.w,
+                                    child: Image.asset(
+                                        'assets/notransactions.jpg'),
+                                  ),
+                                  Text(
+                                    'You have no transactions at the moment',
+                                    style: MyText.mobile(),
+                                  )
+                                ],
+                              )
+                            : StickyGroupedListView<Expense, DateTime>(
+                                elements: state.expenses,
+                                groupBy: (expense) => expense.date,
+                                groupComparator: (value1, value2) =>
+                                    value2.compareTo(value1),
+                                itemComparator: (element1, element2) =>
+                                    element1.date.compareTo(element2.date),
+                                order: StickyGroupedListOrder.ASC,
+                                groupSeparatorBuilder: (Expense transaction) {
+                                  final DateTime date = transaction.date;
+                                  return Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20.w),
+                                    child: Container(
+                                      // Build your group separator widget here using the date
+                                      child: Text(
+                                        DateFormat('dd MMMM, y').format(date),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                itemBuilder: (_, transaction) {
+                                  return ExpenseWidget(expense: transaction);
+                                },
+                              );
                       }
                       return Container();
                     },

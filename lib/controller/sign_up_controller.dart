@@ -43,7 +43,7 @@ class SignUpController extends State<SignUpScreen> {
       obscureText = !obscureText;
     });
   }
-
+/// validates the form fields and triggers the sign up event
   void onSignUp() {
     if (formKey.currentState!.validate()) {
       context.read<AuthenticationBloc>().add(EmailSignUpEvent(
@@ -51,11 +51,15 @@ class SignUpController extends State<SignUpScreen> {
           name: nameController.text,
           phoneNumber: phoneNumberController.text,
           password: passwordController.text));
+      emailController.clear();
+      nameController.clear();
+      phoneNumberController.clear();
+      passwordController.clear();
     }
   }
-
+/// push the sign in screen
   void pushLogin() {
-    context.push( SignInScreen.route);
+    context.push(SignInScreen.route);
     // Navigator.of(context).pushReplacement(MaterialPageRoute(
     //   builder: (context) => const SignInScreen(),
     // ));

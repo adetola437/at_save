@@ -1,4 +1,4 @@
-import 'package:at_save/repository.dart';
+import 'package:at_save/repository/repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';

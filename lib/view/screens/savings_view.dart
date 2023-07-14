@@ -13,7 +13,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 
 import '../../bloc/goals/goals_bloc.dart';
-import '../../bloc/user/user_bloc.dart';
 import '../../boiler_plate/stateless_view.dart';
 import '../widgets/savings_widget.dart';
 
@@ -34,7 +33,7 @@ class SavingsView extends StatelessView<SavingsScreen, SavingsController> {
         onRefresh: () async {
           controller.loading();
           await controller.onRefresh();
-            controller.notLoading();
+          controller.notLoading();
         },
         child: SingleChildScrollView(
             child: Padding(
@@ -48,10 +47,10 @@ class SavingsView extends StatelessView<SavingsScreen, SavingsController> {
                   text: 'Savings',
                   trailing: Icons.save),
               Height(20.h),
-              BlocBuilder<UserBloc, UserState>(
+              BlocBuilder<GoalsBloc, GoalsState>(
                 builder: (context, state) {
-                  if (state is UserSuccess) {
-                    double amount = state.user.savingsBalance!.toDouble();
+                  if (state is GoalsLoaded) {
+                    double amount = controller.getTotalGoalsAmount(state.goals);
                     return SizedBox(
                       height: 150.h,
                       width: double.maxFinite,
@@ -123,27 +122,72 @@ class SavingsView extends StatelessView<SavingsScreen, SavingsController> {
                           return TabBarView(
                               controller: controller.tabController,
                               children: [
-                                ListView.builder(
-                                    itemCount: activeGoals.length,
-                                    itemBuilder: (ctx, index) {
-                                      return SavingsWidget(
-                                        goal: activeGoals[index],
-                                      );
-                                    }),
-                                ListView.builder(
-                                    itemCount: terminatedGoals.length,
-                                    itemBuilder: (ctx, index) {
-                                      return SavingsWidget(
-                                        goal: terminatedGoals[index],
-                                      );
-                                    }),
-                                ListView.builder(
-                                    itemCount: completedGoals.length,
-                                    itemBuilder: (ctx, index) {
-                                      return SavingsWidget(
-                                        goal: completedGoals[index],
-                                      );
-                                    })
+                                activeGoals.isEmpty
+                                    ? Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 300.h,
+                                            width: 300.w,
+                                            child: SvgPicture.asset(
+                                                'assets/nosavings.svg'),
+                                          ),
+                                          Text(
+                                            'You have no active savings at the moment',
+                                            style: MyText.mobile(),
+                                          )
+                                        ],
+                                      )
+                                    : ListView.builder(
+                                        itemCount: activeGoals.length,
+                                        itemBuilder: (ctx, index) {
+                                          return SavingsWidget(
+                                            goal: activeGoals[index],
+                                          );
+                                        }),
+                                terminatedGoals.isEmpty
+                                    ? Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 300.h,
+                                            width: 300.w,
+                                            child: SvgPicture.asset(
+                                                'assets/nosavings.svg'),
+                                          ),
+                                          Text(
+                                            'You have no broken savings at the moment',
+                                            style: MyText.mobile(),
+                                          )
+                                        ],
+                                      )
+                                    : ListView.builder(
+                                        itemCount: terminatedGoals.length,
+                                        itemBuilder: (ctx, index) {
+                                          return SavingsWidget(
+                                            goal: terminatedGoals[index],
+                                          );
+                                        }),
+                                completedGoals.isEmpty
+                                    ? Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 300.h,
+                                            width: 300.w,
+                                            child: SvgPicture.asset(
+                                                'assets/nosavings.svg'),
+                                          ),
+                                          Text(
+                                            'You have no completed savings at the moment',
+                                            style: MyText.mobile(),
+                                          )
+                                        ],
+                                      )
+                                    : ListView.builder(
+                                        itemCount: completedGoals.length,
+                                        itemBuilder: (ctx, index) {
+                                          return SavingsWidget(
+                                            goal: completedGoals[index],
+                                          );
+                                        })
                               ]);
                         }
                         return Container();

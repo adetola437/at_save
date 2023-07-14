@@ -3,7 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../model/expense.dart';
-import '../../repository.dart';
+import '../../repository/repository.dart';
 
 part 'expense_transaction_event.dart';
 part 'expense_transaction_state.dart';
@@ -39,7 +39,7 @@ class ExpenseTransactionBloc
 
       emit(ExpenseTransactionCreated());
     } catch (e) {
-      print(e);
+      emit(ExpenseTransactionError());
     }
   }
 

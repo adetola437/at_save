@@ -1,5 +1,6 @@
 import 'package:at_save/Database/local_database.dart';
-import 'package:at_save/apap_router.dart';
+import 'package:at_save/bloc/visibility/visibility_bloc.dart';
+import 'package:at_save/router/app_router.dart';
 import 'package:at_save/bloc/budget/budget_bloc.dart';
 import 'package:at_save/bloc/expense_transaction/expense_transaction_bloc.dart';
 import 'package:at_save/bloc/goals/goals_bloc.dart';
@@ -59,6 +60,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<ExpenseTransactionBloc>(
             create: (context) => ExpenseTransactionBloc(),
+          ),
+           BlocProvider<VisibilityBloc>(
+            create: (context) => VisibilityBloc(),
           ),
         ],
         child: ScreenUtilInit(

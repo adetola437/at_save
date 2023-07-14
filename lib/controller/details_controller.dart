@@ -26,7 +26,7 @@ class DetailsController extends State<DetailsScreen> {
   ///Pops up the alert dialog to confirm the users action
   showConfirmationDialog(
     BuildContext context,
-    String text,
+    String text,    //text to display in the alert dialog
     double amount,
     Function(bool) onConfirmed,
   ) {
@@ -82,7 +82,7 @@ class DetailsController extends State<DetailsScreen> {
             InkWell(
               onTap: () {
                 Navigator.of(context).pop(true);
-                onConfirmed(true);
+                onConfirmed(true);   // action to perform when true
               },
               child: SizedBox(
                 width: 140.w,
@@ -157,14 +157,14 @@ class DetailsController extends State<DetailsScreen> {
     } else {
       showConfirmationDialog(
         context,
-        'Are you sure you want to delete/break this goal?',
+        'Are you sure you want to break this goal?',
         amount,
         (confirmed) {
           if (confirmed) {
             // Perform the action (delete/break goal)
             context
                 .read<GoalsBloc>()
-                .add(BreakSavingsEvent(amount: amount, id: widget.goalId));
+                .add(BreakSavingsEvent(amount: amount, id: widget.goalId,status: 'Terminated'));
             // Additional logic for breaking goal if needed
           }
         },
@@ -183,9 +183,9 @@ class DetailsController extends State<DetailsScreen> {
 
   ///This is the action button used to delete a goal
   void deleteGoal(double amount) async {
-    showConfirmationDialog(
+    showConfirmationDialog(     //calls the alert dialog and pass the confirmation action
       context,
-      'Are you sure you want to delete/break this goal?',
+      'Are you sure you want to delete this goal?',
       amount,
       (confirmed) {
         if (confirmed) {
@@ -215,9 +215,9 @@ class DetailsController extends State<DetailsScreen> {
     return dateFormat.format(dateTime);
   }
 
-  ///Go to history
+  ///Go to history screen
   viewHistory() {
-    context.push('history', extra: widget.goalId);
+    context.push('/history', extra: widget.goalId);
     // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
     //   return HistoryScreen(
     //     id: widget.goalId,
@@ -228,4 +228,5 @@ class DetailsController extends State<DetailsScreen> {
   deleteError() {
     context.go('/error', extra: 'Error deleting goal');
   }
+  
 }

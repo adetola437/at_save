@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/user.dart';
-import '../../repository.dart';
+import '../../repository/repository.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';

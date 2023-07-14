@@ -1,8 +1,9 @@
 import 'package:at_save/bloc/expense_transaction/expense_transaction_bloc.dart';
-import 'package:at_save/controller/success_controller.dart';
 import 'package:at_save/view/screens/withdraw_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 
 class WithdrawScreen extends StatefulWidget {
   const WithdrawScreen({super.key});
@@ -37,15 +38,19 @@ class WithdrawController extends State<WithdrawScreen> {
     });
   }
 
-  withdraw() {
+  withdraw(double walletBalance) {
     if (formKey.currentState!.validate()) {
-      context.read<ExpenseTransactionBloc>().add(CreateExpenseTransaction(
-        description: descriptionController.text,
-          amount: double.parse(amountController.text),
-          category: selectedOption!,
-          date: DateTime.now(),
-          id: '',
-          transactionType: 'withdraw'));
+      if (double.parse(amountController.text) <= walletBalance) {
+        context.read<ExpenseTransactionBloc>().add(CreateExpenseTransaction(
+            description: descriptionController.text,
+            amount: double.parse(amountController.text),
+            category: selectedOption!,
+            date: DateTime.now(),
+            id: '',
+            transactionType: 'withdraw'));
+      } else {
+        Fluttertoast.showToast(msg: 'You do not have sufficient balance');
+      }
     }
   }
 
@@ -56,10 +61,15 @@ class WithdrawController extends State<WithdrawScreen> {
   }
 
   pushSuccess() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const SuccessScreen(
-        text: 'You have Successfully Withdrawn your funds',
-      ),
-    ));
+    context.go('/success', extra: 'You have successfully withdrawn your funds');
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => const SuccessScreen(
+    //     text: 'You have Successfully Withdrawn your funds',
+    //   ),
+    // ));
+  }
+
+  pushError() {
+    context.go('/error', extra: 'Error withdrawing your funds');
   }
 }

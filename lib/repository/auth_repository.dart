@@ -7,7 +7,7 @@ import 'package:at_save/model/user.dart' as adduser;
 class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+/// Firebase auth to sign user up with email and password
   Future<void> signUpWithEmail(
    
       String email, String password, String name, String phoneNumber) async {

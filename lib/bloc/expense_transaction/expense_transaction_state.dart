@@ -12,6 +12,8 @@ class ExpenseTransactionInitial extends ExpenseTransactionState {}
 class ExpenseTransactionLoading extends ExpenseTransactionState {}
 
 class ExpenseTransactionError extends ExpenseTransactionState {}
+class ExpensedepositError extends ExpenseTransactionState {}
+class ExpenseWithdrawError extends ExpenseTransactionState {}
 class ExpenseTransactionCreated extends ExpenseTransactionState {}
 
 class ExpenseTransactionLoaded extends ExpenseTransactionState {

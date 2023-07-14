@@ -42,3 +42,4 @@ class SignupSuccess extends AuthenticationState {
   @override
   List<Object> get props => [];
 }
+class LogOutSuccessful extends AuthenticationState{}

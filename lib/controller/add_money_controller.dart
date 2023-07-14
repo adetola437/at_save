@@ -35,7 +35,7 @@ class AddMoneyController extends State<AddMoneyScreen> {
   void removeDigit() {
     setState(() {
       if (pin.isNotEmpty) {
-        pin = pin.substring(0, pin.length - 1);
+        pin = pin.substring(0, pin.length - 1); 
       }
     });
   }
@@ -70,6 +70,7 @@ class AddMoneyController extends State<AddMoneyScreen> {
     }
   }
 
+
 //Triggers the loading state
   loading() {
     setState(() {
@@ -98,5 +99,9 @@ class AddMoneyController extends State<AddMoneyScreen> {
     //     text: 'You have added money tpo your savings',
     //   ),
     // ));
+  }
+   // when there is an errror during topup, the error screen is called
+   topUpError() {
+    context.go('/error', extra: 'Error funding your goal');
   }
 }

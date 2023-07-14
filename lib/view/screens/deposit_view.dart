@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 
 import '../../bloc/expense_transaction/expense_transaction_bloc.dart';
@@ -43,16 +44,24 @@ class DepositView extends StatelessView<DepositScreen, DepositController> {
                   if (state is ExpenseTransactionCreated) {
                     controller.pushSuccess();
                   }
+                  if (state is ExpenseTransactionError) {
+                    controller.pushError();
+                  }
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 30.h),
-                      child: SizedBox(
-                        height: 30.h,
-                        width: 30.w,
-                        child: SvgPicture.asset('assets/cancel.svg'),
+                    InkWell(
+                      onTap: () {
+                        context.pop();
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 30.h),
+                        child: SizedBox(
+                          height: 30.h,
+                          width: 30.w,
+                          child: SvgPicture.asset('assets/cancel.svg'),
+                        ),
                       ),
                     ),
                     Height(40.h),
