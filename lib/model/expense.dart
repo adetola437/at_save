@@ -13,13 +13,13 @@ class Expense {
   String transactionType;
 
   Expense({
-    required this.description,
-    this.myId,
-    required this.id,
-    required this.category,
-    required this.amount,
-    required this.date,
-    required this.transactionType,
+    required this.description,  //description of the transaction made
+    this.myId,  //isar unique id
+    required this.id,  //unique id gotten from firebase
+    required this.category, //bedget category for withdrawal
+    required this.amount, //amount to be withdrawn
+    required this.date, //date od withdrawal
+    required this.transactionType,   //type of transaction,
   });
 
   factory Expense.fromJson(Map<String, dynamic> json) {

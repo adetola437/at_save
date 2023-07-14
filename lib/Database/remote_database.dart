@@ -12,6 +12,7 @@ import '../model/expense.dart';
 import '../model/savings_transaction.dart';
 import '../model/user.dart';
 
+///This is the class where all calls to firebase is implemented
 class RemoteDatabase {
   final CollectionReference usersCollection =
       FirebaseFirestore.instance.collection('users');
@@ -71,7 +72,6 @@ class RemoteDatabase {
       sendPushNotification(token!, 'Congratulations!!!',
           'You have Successfully created your goal ${goal.title}');
 
-      print('Transaction saved successfully!');
       return true;
     } catch (error) {
       return false;
@@ -79,7 +79,7 @@ class RemoteDatabase {
     }
   }
 
-  /// takesa an amount and adds it tothe total savings in the user model
+  /// takes an amount and adds it tothe total savings in the user model
   Future addToUserTotalSavingsBalance(double amount) async {
     try {
       String? uid = await manager.getUid();
@@ -92,11 +92,10 @@ class RemoteDatabase {
         double currentAmount = userBalance + amount;
         await userSnapshot.update({'savings_balance': currentAmount});
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
+  /// deducts a dedicated amount from the users total savings balance
   Future removeFromUserTotalSavingsBalance(double amount) async {
     try {
       String? uid = await manager.getUid();
@@ -109,9 +108,7 @@ class RemoteDatabase {
         double currentAmount = userBalance - amount;
         await userSnapshot.update({'savings_balance': currentAmount});
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
 //Method to add money to savings
@@ -126,15 +123,15 @@ class RemoteDatabase {
       final snapshot = await userSnapshot.get();
       final savingsData = snapshot.data();
       if (savingsData != null) {
-        double userBalance = savingsData['current_amount'].toDouble();
+        double userBalance = savingsData['current_amount']
+            .toDouble(); //geths the current amount from firebase
         double currentAmount = userBalance + amount;
         await userSnapshot.update({'current_amount': currentAmount});
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
+  /// remove a dedicated amount from users savings balance
   Future removeFromSavingsBalance(double amount, String id) async {
     try {
       String? uid = await manager.getUid();
@@ -146,18 +143,16 @@ class RemoteDatabase {
       final snapshot = await userSnapshot.get();
       final savingsData = snapshot.data();
       if (savingsData != null) {
-        print(savingsData.runtimeType);
         // print(savingsData['id']);
         double userBalance = savingsData['current_amount'].toDouble();
 
         double currentAmount = userBalance - amount;
         await userSnapshot.update({'current_amount': currentAmount});
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
+  ///Add money to the users wallet balance on firebase
   Future addToWalletBalance(double amount, String id) async {
     try {
       String? uid = await manager.getUid();
@@ -170,9 +165,7 @@ class RemoteDatabase {
         double currentAmount = userBalance + amount;
         await userSnapshot.update({'wallet_balance': currentAmount});
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future removeFromWalletBalance(double amount) async {
@@ -187,12 +180,10 @@ class RemoteDatabase {
         double currentAmount = userBalance - amount;
         await userSnapshot.update({'wallet_balance': currentAmount});
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
-//Fetching the list goals
+//Fetching the list of goals from firebase
   Future<List<SavingsGoal>> getGoals() async {
     String? uid = await manager.getUid();
     try {
@@ -213,12 +204,11 @@ class RemoteDatabase {
       }).toList();
       return goals;
     } catch (e) {
-      print(e);
       return [];
     }
   }
 
-  //Add funds to savings
+  //Add funds to a savings goal,
   Future addMoney(String id, double amount) async {
     // log(id);
     String? uid = await manager.getUid();
@@ -252,7 +242,6 @@ class RemoteDatabase {
       }
 
       double currentSavings = savingsBalance + amount;
-      print(currentAmount);
 
       await userRef.update({'current_amount': currentSavings});
       await userSnapshot.update({'savings_balance': currentAmount});
@@ -260,6 +249,7 @@ class RemoteDatabase {
     }
   }
 
+  ///When a goal has been deleted, all transactions too with that goal id will also be deleted
   Future deleteAllTransactions(String id) async {
     String? uid = await manager.getUid();
     try {
@@ -285,22 +275,21 @@ class RemoteDatabase {
           .doc(id);
 
       await userSnapshot.update({'status': status});
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
+  /// Break a savings at any point in time
   Future breakSavings(String id, double amount) async {
     try {
       await removeFromSavingsBalance(amount, id);
       await removeFromUserTotalSavingsBalance(amount);
       await changeSavingsStatus(id, 'Terminated');
       await addToWalletBalance(amount, id);
-    } catch (e) {
-      print(e);
-    }
+     // await createExpensesTransaction(expense);
+    } catch (e) {}
   }
 
+  /// fetches a goal by id from firebase and deletes it
   Future deleteGoal(String id, double amount) async {
     String? token = await manager.getMessagingToken();
     try {
@@ -320,11 +309,11 @@ class RemoteDatabase {
 
       //print('Goal deleted successfully!');
     } catch (e) {
-      print(e);
       //print('Error Deleting goal');
     }
   }
 
+  ///creates a saving transaction when a transaction has been made on a saving goal
   Future createSavingsTransaction(
     SavingsTransaction transaction,
   ) async {
@@ -348,13 +337,10 @@ class RemoteDatabase {
 
       var addTransactionId = snapshot.doc(docRef.id);
       await addTransactionId.update({'id': docRef.id});
-
-      print('Transaction saved successfully!');
-    } catch (error) {
-      print('Error saving transaction: $error');
-    }
+    } catch (error) {}
   }
 
+  /// fetches all the savings transactions of the user from firebase
   Future<List<SavingsTransaction>> getSavingsTransactions() async {
     String? uid = await manager.getUid();
     try {
@@ -375,15 +361,14 @@ class RemoteDatabase {
       }).toList();
       return transactions;
     } catch (e) {
-      print(e);
       return [];
     }
   }
 
+  /// Takes all necessary parameters to edit a saving goal
   Future<bool> updateSavings(String id, String title, String description,
       double targetAmount, DateTime date) async {
     String? token = await manager.getMessagingToken();
-    print(id);
 
     try {
       String? uid = await manager.getUid();
@@ -412,10 +397,10 @@ class RemoteDatabase {
     return dateFormat.format(dateTime);
   }
 
+  /// creates an expense budget which is used as a category for withdrawal to track expenses
   Future createBudget(Budget budget) async {
     String? uid = await manager.getUid();
     String? token = await manager.getMessagingToken();
-    print('creating');
     try {
       final CollectionReference reference =
           FirebaseFirestore.instance.collection('budgets');
@@ -426,11 +411,10 @@ class RemoteDatabase {
           .set(budget.toJson());
       sendPushNotification(token!, 'Budget Created',
           'You have Successfully created ${budget.name} budget');
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
+  ///Get all the list  of budgets from the database
   Future<List<Budget>> getBudgets() async {
     String? uid = await manager.getUid();
     try {
@@ -452,10 +436,11 @@ class RemoteDatabase {
 
       return budgets;
     } catch (e) {
-      print(e);
       return [];
     }
   }
+
+  ///When a transaction occurs on the wallet, this method handles it
 
   Future createExpensesTransaction(
     Expense expense,
@@ -492,12 +477,10 @@ class RemoteDatabase {
         sendPushNotification(token!, 'Deposit Successful',
             'You have Successfully deposited ${expense.amount} into your wallet.');
       }
-
-      print('Expense saved successfully!');
-    } catch (error) {
-      print('Error saving transaction: $error');
-    }
+    } catch (error) {}
   }
+
+  ///Fetch all the list of expense transactions made from firebase
 
   Future<List<Expense>> getExpensesTransactions() async {
     String? uid = await manager.getUid();
@@ -519,10 +502,11 @@ class RemoteDatabase {
       }).toList();
       return transactions;
     } catch (e) {
-      print(e);
       return [];
     }
   }
+
+  ///When an expense transaction has been done, the category, which is the expense budget is updated
 
   Future addMoneyToBudget(double amount, String budgetName) async {
     // log(id);
@@ -554,15 +538,16 @@ class RemoteDatabase {
     } catch (e) {}
   }
 
+  /// method to send push notification using firebase messaaging and 02Auth token, but auth does expire, been trying to find a way to automatically regenerate auth.
   Future<void> sendPushNotification(
       String deviceToken, String title, String body) async {
     const url =
         'https://fcm.googleapis.com/v1/projects/atsave-29469/messages:send';
-
+//holds the auth token to be refreshed
     final headers = {
       'Content-Type': 'application/json',
       'Authorization':
-          'Bearer ya29.a0AbVbY6OjfM0lkx0LKYPotjgo5qMLYL6IRqN-KRJIRaq-E5zj4MB1i5XJ0O4rQmxBLrh6gq5vs-buPSdUbMwW8NikDzqmd6V9h0r35uJ4cN8ehvT1BI8a8wZsrTHlDEsOFLV5Tj2GU1-LVemnHu5Gb4u2Dan479nGaCgYKASESARASFQFWKvPlsQxaEouc23-NiGRq_qQEcA0167',
+          'Bearer ya29.a0AbVbY6M6RAE9hh6chX0-lTv068EP8LT_R_9_eFP8zvF8eiaCDCL3VTUeE75YG0rX6956NEz7kKQNz126up2Xnzf065qNPiaRTXbWLHl9pc-7fU60oL0y3Sw5cQHXauPMawe0-DY6FoAGvM858X-KSa16m6oQaCgYKAUwSARASFQFWKvPl-z9MAN0SRkvasX5vGhDT0g0163',
     };
 
     final message = {
@@ -579,10 +564,7 @@ class RemoteDatabase {
         headers: headers, body: jsonEncode(message));
 
     if (response.statusCode == 200) {
-      print('Push notification sent successfully.');
-    } else {
-      print('Failed to send push notification. Error: ${response.body}');
-    }
+    } else {}
   }
 
 // ...

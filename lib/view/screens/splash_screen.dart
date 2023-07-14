@@ -1,4 +1,5 @@
 import 'package:at_save/controller/splash_controller.dart';
+import 'package:at_save/theme/colors.dart';
 import 'package:at_save/theme/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +10,6 @@ import '../../boiler_plate/stateless_view.dart';
 class SplashScreen extends StatelessView {
   const SplashScreen(SplashController controller, {Key? key})
       : super(controller, key: key);
-  
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class SplashScreen extends StatelessView {
                     children: [
                       TextSpan(
                         text: 'AT',
-                        style: MyText.splashText(color: Colors.red),
+                        style: MyText.splashText(color: AppColor.primaryColor),
                       ),
                       const TextSpan(
                         text: 'SAVE',

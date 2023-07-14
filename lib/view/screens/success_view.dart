@@ -34,7 +34,10 @@ class SuccessView extends StatelessView<SuccessScreen, SuccessController> {
                 onTap: () {
                   controller.goHome();
                 },
-                child: Button(text: 'CLOSE'))
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Button(text: 'CLOSE'),
+                ))
           ],
         ),
       ),

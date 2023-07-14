@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import 'landing_controller.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -60,20 +62,21 @@ class ProfileController extends State<ProfileScreen> {
     if (confirmed) {
       context.read<AuthenticationBloc>().add(LogOutEvent());
       context.go(SignInScreen.route);
+      currentIndex.value = 0;
 
       //   Add your logout code here
     }
   }
+
   String getInitials(String fullName) {
-  final nameParts = fullName.split(' ');
-  final firstName = nameParts[0].trim();
+    final nameParts = fullName.split(' ');
+    final firstName = nameParts[0].trim();
 
-  if (nameParts.length > 1) {
-    final lastName = nameParts[nameParts.length - 1].trim();
-    return '${firstName[0]}${lastName[0]}';
-  } else {
-    return firstName[0];
+    if (nameParts.length > 1) {
+      final lastName = nameParts[nameParts.length - 1].trim();
+      return '${firstName[0]}${lastName[0]}';
+    } else {
+      return firstName[0];
+    }
   }
-}
-
 }

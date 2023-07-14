@@ -51,10 +51,7 @@ class SignUpController extends State<SignUpScreen> {
           name: nameController.text,
           phoneNumber: phoneNumberController.text,
           password: passwordController.text));
-      emailController.clear();
-      nameController.clear();
-      phoneNumberController.clear();
-      passwordController.clear();
+     
     }
   }
 /// push the sign in screen
@@ -63,5 +60,12 @@ class SignUpController extends State<SignUpScreen> {
     // Navigator.of(context).pushReplacement(MaterialPageRoute(
     //   builder: (context) => const SignInScreen(),
     // ));
+  }
+
+  void clearFields(){
+     emailController.clear();
+      nameController.clear();
+      phoneNumberController.clear();
+      passwordController.clear();
   }
 }

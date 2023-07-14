@@ -8,6 +8,7 @@ import '../../model/budget.dart';
 part 'budget_event.dart';
 part 'budget_state.dart';
 
+///This bloc holds information about the expense budgets
 class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   BudgetBloc() : super(BudgetInitial()) {
     on<BudgetEvent>((event, emit) {

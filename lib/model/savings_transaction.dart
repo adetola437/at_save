@@ -3,12 +3,12 @@ import 'package:isar/isar.dart';
 part 'savings_transaction.g.dart';
 @Collection()
 class SavingsTransaction {
-   Id? myId;
-   String id;
-   double amount;
-   DateTime date;
-   String note;
-   String savingsGoalId;
+   Id? myId;  //isar auto id
+   String id;  //Unique id for the goal from firebase
+   double amount;  //amount added to the savings
+   DateTime date;  //target date of the savings
+   String note; //description of the savings trasnaction
+   String savingsGoalId;  //unique id of the goal attributed to this transaction
 
   SavingsTransaction({
     this.myId,

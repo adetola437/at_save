@@ -4,17 +4,17 @@ part 'user.g.dart';
 
 @Collection()
 class User {
-  Id? id;
-  String uid;
-  String name;
-  String email;
-  String phoneNumber;
+  Id? id;  //isar auti id
+  String uid;  //uid of the user
+  String name;  //full name of the user
+  String email;  //email of the user
+  String phoneNumber;  //phone number of the user
 
-  double? totalBalance;
+  double? totalBalance;  //total balance of the user
 
-  double? savingsBalance;
+  double? savingsBalance;  //total savings balance of the user
 
-  double? walletBalance;
+  double? walletBalance;  //wallet balance of the user
 
   User({
     required this.phoneNumber,

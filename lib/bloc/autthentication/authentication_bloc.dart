@@ -25,7 +25,7 @@ class AuthenticationBloc
     );
   }
 }
-
+///Method used to implemt the users logout
 _logOut(LogOutEvent event, emit) async {
   emit(AuthenticationLoading());
   Repository repo = Repository();

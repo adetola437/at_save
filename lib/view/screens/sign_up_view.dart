@@ -30,6 +30,7 @@ class SignUpView extends StatelessView<SignUpScreen, SignUpController> {
               listener: (context, state) {
                 if (state is SignupSuccess) {
                   controller.pushLogin();
+                  controller.clearFields();
                 }
                 if (state is SignupError) {
                   Fluttertoast.showToast(msg: state.error);

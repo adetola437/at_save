@@ -1,5 +1,6 @@
 import 'package:at_save/bloc/expense_transaction/expense_transaction_bloc.dart';
 import 'package:at_save/bloc/savings_transaction/savings_transactions_bloc.dart';
+import 'package:at_save/controller/landing_controller.dart';
 import 'package:at_save/view/screens/success_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +41,7 @@ class SuccessController extends State<SuccessScreen> {
     // Navigator.of(context).pushReplacement(MaterialPageRoute(
     //   builder: (context) => const LandingScreen(),
     // ));
+    currentIndex.value = 0;
     context.go('/home');
   }
 }

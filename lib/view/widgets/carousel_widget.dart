@@ -33,24 +33,24 @@ class CarouselWidget extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
               child: SizedBox(
                   height: 30.h,
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.wifi,
                         color: Colors.white,
                       ),
-                      Container(
-                          height: 20.h,
-                          width: 20.w,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50.r),
-                              color: AppColor.white),
-                          child: Icon(
-                            Icons.visibility,
-                            color: AppColor.secondaryColor,
-                            size: 15.sp,
-                          ))
+                      // Container(
+                      //     height: 20.h,
+                      //     width: 20.w,
+                      //     decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(50.r),
+                      //         color: AppColor.white),
+                      //     child: Icon(
+                      //       Icons.visibility,
+                      //       color: AppColor.secondaryColor,
+                      //       size: 15.sp,
+                      //     ))
                     ],
                   )),
             ),

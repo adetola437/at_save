@@ -8,8 +8,8 @@ abstract class ExpenseTransactionEvent extends Equatable {
 }
 
 class CreateExpenseTransaction extends ExpenseTransactionEvent {
-  String id;
-  String category;
+  String id;  
+  String category;  
   double amount;
   DateTime date;
   String transactionType;

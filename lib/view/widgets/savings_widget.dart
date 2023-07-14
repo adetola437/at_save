@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../controller/details_controller.dart';
-import '../../utils/price_format.dart';
 import '../../theme/colors.dart';
 import '../../theme/text.dart';
+import '../../utils/price_format.dart';
 import 'height.dart';
 
 class SavingsWidget extends StatelessWidget {
@@ -65,7 +64,7 @@ class SavingsWidget extends StatelessWidget {
                       ),
                       Container(
                         height: 15.h,
-                        width: 40.w,
+                        width: 60.w,
                         decoration: BoxDecoration(
                             color: borderColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10.r)),

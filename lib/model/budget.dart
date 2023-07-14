@@ -4,11 +4,11 @@ part 'budget.g.dart';
 
 @Collection()
 class Budget {
-  Id? myId;
-  String name;
-  double amount;
-  double? currentAmount;
-  int color;
+  Id? myId;  // isar unique id
+  String name;  //name of the expense budget created
+  double amount; //Budget target 
+  double? currentAmount;   //current amount of the budget expense
+  int color; //Color for the pie chart
 
   Budget({
     required this.name,

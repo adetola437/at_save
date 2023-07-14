@@ -23,7 +23,7 @@ class ExpenseTransactionBloc
       (event, emit) => _fetchExpenseTransactions(event, emit),
     );
   }
-
+///Creates a new expense transaction
   _createExpenseTransaction(CreateExpenseTransaction event, emit) async {
     emit(ExpenseTransactionLoading());
     Repository repo = Repository();
@@ -42,7 +42,7 @@ class ExpenseTransactionBloc
       emit(ExpenseTransactionError());
     }
   }
-
+///This method fetches the list of all expense transactions
   _fetchExpenseTransactions(FetchExpenseTransaction event, emit) async {
     var connectivityResult = await Connectivity().checkConnectivity();
     emit(ExpenseTransactionLoading());

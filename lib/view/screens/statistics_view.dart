@@ -150,7 +150,7 @@ class StatisticsView
                 //   ),
                 // )
                 SizedBox(
-                  height: 350.h,
+                  height: 330.h,
                   width: 370.w,
                   child: BlocBuilder<ExpenseTransactionBloc,
                       ExpenseTransactionState>(

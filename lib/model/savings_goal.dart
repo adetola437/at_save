@@ -5,15 +5,15 @@ part 'savings_goal.g.dart';
 
 @Collection()
 class SavingsGoal {
-  Id? myId;
-  String id;
-  String status;
-  String title;
-  double targetAmount;
-  DateTime targetDate;
-  DateTime createdDate;
-  String description;
-  double currentAmount;
+  Id? myId;  //unique isar id
+  String id; //unique id gotten from firebase
+  String status;  //current status of the savings
+  String title;  // name of the savings goal
+  double targetAmount;  //target amoount of the savings goal
+  DateTime targetDate;  //target date of the savings goal
+  DateTime createdDate;  //created date of the savings goal
+  String description; //description of the savings goal
+  double currentAmount;  // current amount of the savings goal
 
   SavingsGoal({
     this.status = 'Active',
