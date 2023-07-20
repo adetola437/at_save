@@ -50,7 +50,6 @@ class ExpenseTransactionBloc
     List<Expense> localExpenses = await repo.getLocalExpenses();
     try {
       if (connectivityResult == ConnectivityResult.none) {
-        print('local expense');
         emit(ExpenseTransactionLoaded(expenses: localExpenses));
       } else if (connectivityResult == ConnectivityResult.wifi ||
           connectivityResult == ConnectivityResult.mobile) {
@@ -65,7 +64,6 @@ class ExpenseTransactionBloc
         emit(ExpenseTransactionLoaded(expenses: remoteExpenses));
       }
     } catch (e) {
-      print(e);
       emit(ExpenseTransactionError());
     }
   }

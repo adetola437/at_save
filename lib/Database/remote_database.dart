@@ -285,7 +285,7 @@ class RemoteDatabase {
       await removeFromUserTotalSavingsBalance(amount);
       await changeSavingsStatus(id, 'Terminated');
       await addToWalletBalance(amount, id);
-     // await createExpensesTransaction(expense);
+      // await createExpensesTransaction(expense);
     } catch (e) {}
   }
 
@@ -472,11 +472,11 @@ class RemoteDatabase {
         await addMoneyToBudget(expense.amount, expense.category);
         sendPushNotification(token!, 'Withdraw Successful',
             'You have Successfully withdrawn ${expense.amount} from your wallet for ${expense.category}');
-      } else {
+      } else if (expense.transactionType == 'deposit') {
         await addToWalletBalance(expense.amount, '');
         sendPushNotification(token!, 'Deposit Successful',
             'You have Successfully deposited ${expense.amount} into your wallet.');
-      }
+      } else if (expense.transactionType == 'savings_creation') {}
     } catch (error) {}
   }
 
@@ -547,7 +547,7 @@ class RemoteDatabase {
     final headers = {
       'Content-Type': 'application/json',
       'Authorization':
-          'Bearer ya29.a0AbVbY6M6RAE9hh6chX0-lTv068EP8LT_R_9_eFP8zvF8eiaCDCL3VTUeE75YG0rX6956NEz7kKQNz126up2Xnzf065qNPiaRTXbWLHl9pc-7fU60oL0y3Sw5cQHXauPMawe0-DY6FoAGvM858X-KSa16m6oQaCgYKAUwSARASFQFWKvPl-z9MAN0SRkvasX5vGhDT0g0163',
+          'Bearerya29.a0AbVbY6OUTCFKtGify6HUDXwlOmb5ywnpSAdR4TqNAXQ8PfjTg2lo8KDH2fGxfS4hdfBSuk28lO9XYyO0V1kGsocS0o2oKxKQSMn0evH3xILKSoJkVdxldYRHZ7Y1Jkz_HN8bwQ6uYfJDiqUsjXVv6kl7w8XW0R4aCgYKAaISARASFQFWKvPlrDOCOumtwrpzfoNSEcS06w0166',
     };
 
     final message = {

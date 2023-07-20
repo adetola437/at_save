@@ -12,6 +12,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../bloc/budget/budget_bloc.dart';
 import '../../bloc/user/user_bloc.dart';
@@ -58,7 +59,49 @@ class HomePageView extends StatelessView<HomeScreen, HomeController> {
                         children: [
                           BlocBuilder<UserBloc, UserState>(
                             builder: (context, state) {
-                              if (state is UserSuccess) {
+                              if (state is UserLoading) {
+                                return Column(
+                                  children: [
+                                    Shimmer(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.grey[300]!,
+                                          Colors.grey[100]!,
+                                          Colors.grey[300]!,
+                                        ],
+                                        begin: const Alignment(-1.0, 0.0),
+                                        end: const Alignment(2.0, 0.0),
+                                        stops: const [0.0, 0.5, 1.0],
+                                      ),
+                                      // duration: Duration(seconds: 1),
+                                      child: Container(
+                                        width: 200.w,
+                                        height: 30.h,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Shimmer(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.grey[300]!,
+                                          Colors.grey[100]!,
+                                          Colors.grey[300]!,
+                                        ],
+                                        begin: const Alignment(-1.0, 0.0),
+                                        end: const Alignment(2.0, 0.0),
+                                        stops: const [0.0, 0.5, 1.0],
+                                      ),
+                                      // duration: Duration(seconds: 1),
+                                      child: Container(
+                                        width: 200.w,
+                                        height: 20.h,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else if (state is UserSuccess) {
                                 String fullname = state.user.name;
                                 String name =
                                     PriceFormatter.getFirstName(fullname);
@@ -112,6 +155,30 @@ class HomePageView extends StatelessView<HomeScreen, HomeController> {
                   Height(20.h),
                   BlocBuilder<UserBloc, UserState>(
                     builder: (context, state) {
+                      if (state is UserLoading) {
+                        return Column(
+                          children: [
+                            Shimmer(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.grey[300]!,
+                                  Colors.grey[100]!,
+                                  Colors.grey[300]!,
+                                ],
+                                begin: const Alignment(-1.0, 0.0),
+                                end: const Alignment(2.0, 0.0),
+                                stops: const [0.0, 0.5, 1.0],
+                              ),
+                              // duration: Duration(seconds: 1),
+                              child: Container(
+                                width: double.maxFinite,
+                                height: 140.h,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
                       if (state is UserSuccess) {
                         List<CarouselWidget> carousel = [
                           CarouselWidget(

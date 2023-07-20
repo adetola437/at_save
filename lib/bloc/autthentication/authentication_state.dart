@@ -43,3 +43,5 @@ class SignupSuccess extends AuthenticationState {
   List<Object> get props => [];
 }
 class LogOutSuccessful extends AuthenticationState{}
+
+class VerifyEmail extends AuthenticationState{}

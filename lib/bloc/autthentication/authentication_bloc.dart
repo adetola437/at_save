@@ -25,6 +25,7 @@ class AuthenticationBloc
     );
   }
 }
+
 ///Method used to implemt the users logout
 _logOut(LogOutEvent event, emit) async {
   emit(AuthenticationLoading());
@@ -88,7 +89,6 @@ _emailSignIn(EmailSignInEvent event, emit) async {
   AuthRepository authRepository = AuthRepository();
   SessionManager manager = SessionManager();
   String? uid = await manager.getUid();
-  print('Signin');
   emit(AuthenticationLoading());
   try {
     await authRepository.signInWithEmail(event.email, event.password);

@@ -66,6 +66,7 @@ dependencies:
   cron: ^0.5.1
   flutter_switch: ^0.3.2
   workmanager: ^0.5.1
+  shimmer: ^3.0.0
   
 
 dev_dependencies:

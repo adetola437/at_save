@@ -1,3 +1,4 @@
+import 'package:at_save/model/expense.dart';
 import 'package:at_save/model/savings_goal.dart';
 import 'package:at_save/repository/repository.dart';
 import 'package:bloc/bloc.dart';
@@ -50,6 +51,7 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
             event.description, event.targetAmount, event.date);
         await repo.updateSavingsGoal(event.golaId, event.goalName,
             event.description, event.targetAmount, event.date);
+
         emit(GoalEdited());
       }
     } catch (e) {
@@ -86,6 +88,13 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
 
   _breakSavings(BreakSavingsEvent event, emit) async {
     emit(GoalsLoading());
+    Expense expense = Expense(
+        description: 'Savings Withdrawal',
+        id: '',
+        category: 'Savings break',
+        amount: event.amount,
+        date: DateTime.now(),
+        transactionType: 'credit');
     final bool isConnected = await InternetConnectionChecker().hasConnection;
     Repository repo = Repository();
     try {
@@ -100,6 +109,8 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
         await repo.removeFromLocalSavings(event.amount, event.id);
         await repo.addToLocalWalletbalance(event.amount);
         await repo.breakSavings(event.id, event.amount);
+        await repo.createExpenses(expense);
+
         emit(GoalBroken());
       }
     } catch (e) {
@@ -129,6 +140,14 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
         await repo.removeFromLocalWallet(event.amount);
         await repo.addToLocalGoal(event.id, event.amount);
         await repo.addToSavings(event.id, event.amount);
+        Expense expense = Expense(
+            description: 'deposit to savings',
+            id: '',
+            category: 'Savings',
+            amount: event.amount,
+            date: DateTime.now(),
+            transactionType: 'savings_creation');
+        await repo.createExpenses(expense);
         emit(GoalTopUp());
       }
     } catch (e) {
@@ -156,14 +175,12 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
       Repository repo = Repository();
       List<SavingsGoal> localGoals = await repo.getLocalGoals();
       if (connectivityResult == ConnectivityResult.none) {
-        print('loacl goals');
         emit(GoalsLoaded(
             goals: localGoals
               ..sort((a, b) => b.createdDate.compareTo(a.createdDate))));
       } else if (connectivityResult == ConnectivityResult.wifi ||
           connectivityResult == ConnectivityResult.mobile) {
         try {
-          print('connected');
           final List<SavingsGoal> remoteGoals = await repo.getGoals();
 
           if (localGoals != remoteGoals) {
@@ -179,12 +196,18 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
         }
       }
     } catch (e) {
-      print('eeor');
       emit(GoalsLoadingError());
     }
   }
 
   _deleteGoal(DeleteEvent event, emit) async {
+    Expense expense = Expense(
+        description: 'Savings Withdrawal',
+        id: '',
+        category: 'Savings Withdrawal',
+        amount: event.amount,
+        date: DateTime.now(),
+        transactionType: 'debit');
     emit(GoalsLoading());
     Repository repo = Repository();
     final bool isConnected = await InternetConnectionChecker().hasConnection;
@@ -193,6 +216,7 @@ class GoalsBloc extends Bloc<GoalsEvent, GoalsState> {
         bool status = await repo.deleteLocalGoal(event.id, event.amount);
         await repo.addToLocalWalletbalance(event.amount);
         repo.deleteGoal(event.id, event.amount);
+        repo.createExpenses(expense);
         if (status == true) {
           emit(GoalDeleted());
         } else {

@@ -55,7 +55,10 @@ class HistoryView extends StatelessView<HistoryScreen, HistoryController> {
                             .where((element) =>
                                 element.savingsGoalId == controller.widget.id)
                             .toList(),
-                        groupBy: (transaction) => transaction.date,
+                        groupBy: (transaction) => DateTime(
+                            transaction.date.year,
+                            transaction.date.month,
+                            transaction.date.day),
                         groupComparator: (group1, group2) => group2.compareTo(
                             group1), // Sort groups in descending order
                         itemComparator: (item1, item2) => item1.date.compareTo(item2
@@ -76,6 +79,7 @@ class HistoryView extends StatelessView<HistoryScreen, HistoryController> {
                         },
                         itemBuilder: (_, transaction) {
                           return Container(
+                            margin: EdgeInsets.only(bottom: 10.h),
                             height: 100.h,
                             width: double.maxFinite,
                             decoration: BoxDecoration(

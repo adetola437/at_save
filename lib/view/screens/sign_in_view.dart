@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
@@ -38,6 +39,9 @@ class SignInView extends StatelessView<SignInScreen, SignInController> {
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: BlocListener<AuthenticationBloc, AuthenticationState>(
                 listener: (context, state) {
+                  if (state is VerifyEmail) {
+                    Fluttertoast.showToast(msg: 'Verify your email');
+                  }
                   if (state is AuthenticationSuccess) {
                     controller.getUserDetails();
                     controller.loading();
@@ -134,9 +138,14 @@ class SignInView extends StatelessView<SignInScreen, SignInController> {
                         'Have you forgotten your password?',
                         style: MyText.bodySm(color: AppColor.secondaryColor),
                       ),
-                      Text(
-                        'Click here to recover it',
-                        style: MyText.bodySm(color: AppColor.primaryColor),
+                      InkWell(
+                        onTap: () {
+                          context.push('/forgot_password');
+                        },
+                        child: Text(
+                          'Click here to recover it',
+                          style: MyText.bodySm(color: AppColor.primaryColor),
+                        ),
                       ),
                       InkWell(
                         onTap: () {

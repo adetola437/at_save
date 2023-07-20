@@ -3,6 +3,7 @@ import 'package:at_save/controller/deposit_controller.dart';
 import 'package:at_save/controller/details_controller.dart';
 import 'package:at_save/controller/edit_details_controller.dart';
 import 'package:at_save/controller/error_controller.dart';
+import 'package:at_save/controller/forgot_password_controller.dart';
 import 'package:at_save/controller/landing_controller.dart';
 import 'package:at_save/controller/onboarding_controller.dart';
 import 'package:at_save/controller/sign_in_controller.dart';
@@ -19,7 +20,6 @@ import 'package:go_router/go_router.dart';
 import '../controller/sign_up_controller.dart';
 
 final GoRouter router = GoRouter(
-  debugLogDiagnostics: true,
   routes: <GoRoute>[
     GoRoute(
       path: '/',
@@ -69,46 +69,54 @@ final GoRouter router = GoRouter(
         return const CreateScreen();
       },
     ),
-     GoRoute(
+    GoRoute(
       path: '/summary',
       builder: (BuildContext context, GoRouterState state) {
-        return  SummaryScreen(goal: state.extra as SavingsGoal);
+        return SummaryScreen(goal: state.extra as SavingsGoal);
       },
     ),
-     GoRoute(
+    GoRoute(
       path: '/details',
       builder: (BuildContext context, GoRouterState state) {
-        return  DetailsScreen(goalId: state.extra as String);
+        return DetailsScreen(goalId: state.extra as String);
       },
     ),
-     GoRoute(
+    GoRoute(
       path: '/edit_screen',
       builder: (BuildContext context, GoRouterState state) {
-        return  EditScreen(goal: state.extra as SavingsGoal);
+        return EditScreen(goal: state.extra as SavingsGoal);
       },
     ),
-     GoRoute(
+    GoRoute(
       path: '/history',
       builder: (BuildContext context, GoRouterState state) {
         return HistoryScreen(id: state.extra as String);
       },
     ),
-     GoRoute(
+    GoRoute(
       path: '/error',
       builder: (BuildContext context, GoRouterState state) {
-        return ErrorScreen(text: state.extra as String,);
+        return ErrorScreen(
+          text: state.extra as String,
+        );
       },
     ),
-     GoRoute(
+    GoRoute(
       path: '/withdraw',
       builder: (BuildContext context, GoRouterState state) {
-        return WithdrawScreen();
+        return const WithdrawScreen();
+      },
+    ),
+    GoRoute(
+      path: '/deposit',
+      builder: (BuildContext context, GoRouterState state) {
+        return const DepositScreen();
       },
     ),
      GoRoute(
-      path: '/deposit',
+      path: '/forgot_password',
       builder: (BuildContext context, GoRouterState state) {
-        return DepositScreen();
+        return const ForgotPasswordScreen();
       },
     ),
   ],

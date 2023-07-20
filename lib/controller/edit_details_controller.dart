@@ -70,6 +70,8 @@ class EditController extends State<EditScreen> {
       descriptionController.text = widget.goal.description;
       nameController.text = widget.goal.title;
       dateController.text = formatDateToString(widget.goal.targetDate);
+      print(descriptionController.text);
+      print(nameController.text);
     });
     super.initState();
   }
@@ -104,7 +106,8 @@ class EditController extends State<EditScreen> {
       isLoading = true;
     });
   }
-/// push the succes screen
+
+  /// push the succes screen
   success() {
     // Navigator.of(context).pushReplacement(MaterialPageRoute(
     //   builder: (context) => const SuccessScreen(
@@ -113,17 +116,18 @@ class EditController extends State<EditScreen> {
     // ));
     context.go('/success', extra: 'You have Successfully Updated your goal');
   }
+
 // push the error screen
   deleteError() {
     context.go('/error', extra: 'Error deleting goal');
   }
+
   //on edit error, the error screen is called
-   editError() {
+  editError() {
     context.go('/error', extra: 'Error editing your goal');
   }
-   breakError() {
+
+  breakError() {
     context.go('/error', extra: 'Error breaking your goal');
   }
-
- 
 }

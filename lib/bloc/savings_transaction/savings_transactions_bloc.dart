@@ -32,7 +32,6 @@ class SavingsTransactionsBloc
 
     try {
       if (connectivityResult == ConnectivityResult.none) {
-        print('local savingsT');
         emit(SavingsTransactionsLoaded(transactions: localTransactions));
       } else if (connectivityResult == ConnectivityResult.wifi ||
           connectivityResult == ConnectivityResult.mobile) {
@@ -71,7 +70,6 @@ class SavingsTransactionsBloc
 
       emit(SavingsTransactionsLoaded(transactions: localTransactions));
     } catch (e) {
-      print(e);
     }
   }
 }

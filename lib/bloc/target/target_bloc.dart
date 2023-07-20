@@ -1,3 +1,4 @@
+import 'package:at_save/model/expense.dart';
 import 'package:at_save/model/savings_goal.dart';
 import 'package:at_save/repository/repository.dart';
 import 'package:bloc/bloc.dart';
@@ -46,6 +47,15 @@ _createTarget(CreateTargetEvent event, emit) async {
         targetDate: event.targetDate,
         description: event.description);
     bool status = await repo.createGoal(goal);
+
+    Expense expense = Expense(
+        description: event.title,
+        id: '',
+        category: '${event.title} creation',
+        amount: event.currentAmount,
+        date: DateTime.now(),
+        transactionType: 'savings_creation');
+    await repo.createExpenses(expense);
     //emit(TargetError());
     if (status == true) {
       emit(TargetLoaded());
@@ -54,6 +64,5 @@ _createTarget(CreateTargetEvent event, emit) async {
     }
   } catch (e) {
     emit(TargetError());
-    print(e);
   }
 }

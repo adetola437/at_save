@@ -26,6 +26,8 @@ class WithdrawController extends State<WithdrawScreen> {
 
   @override
   void dispose() {
+    amountController.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 
@@ -38,6 +40,7 @@ class WithdrawController extends State<WithdrawScreen> {
     });
   }
 
+  ///Method to wihdraw from user wallet balance
   withdraw(double walletBalance) {
     if (formKey.currentState!.validate()) {
       if (double.parse(amountController.text) <= walletBalance) {
@@ -60,6 +63,7 @@ class WithdrawController extends State<WithdrawScreen> {
     });
   }
 
+  ///go to success state when withdrawal is successful
   pushSuccess() {
     context.go('/success', extra: 'You have successfully withdrawn your funds');
     // Navigator.of(context).pushReplacement(MaterialPageRoute(

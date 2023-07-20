@@ -42,21 +42,24 @@ class HomeController extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) => HomePageView(this);
 
+// call back method to get the current index of carousel slider
   void togglePage(value) {
     setState(() {
       currentIndex = value;
     });
   }
-
+// on click withdraw widget, the withdraw screen should pop up
   goToWithdraw() {
     context.push('/withdraw');
   }
-
+// handle when event is loading
   loading() {
     setState(() {
       isLoading = true;
     });
   }
+
+  ///handle when event is not loading
   notLoading() {
     setState(() {
       isLoading = false;

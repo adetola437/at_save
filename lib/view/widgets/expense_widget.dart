@@ -9,7 +9,7 @@ import 'height.dart';
 
 class ExpenseWidget extends StatelessWidget {
   Expense expense;
-   ExpenseWidget({
+  ExpenseWidget({
     required this.expense,
     super.key,
   });
@@ -32,14 +32,15 @@ class ExpenseWidget extends StatelessWidget {
                 SizedBox(
                     height: 50.h,
                     width: 50.h,
-                    child:
-                    expense.transactionType=='withdraw'?
-                     Image.asset(
-                      'assets/withdraw.png',
-                    ): Image.asset('assets/add.png')),
+                    child: expense.transactionType == 'withdraw'
+                        ? Image.asset(
+                            'assets/withdraw.png',
+                          )
+                        : Image.asset('assets/add.png')),
                 Width(10.w),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       expense.category,
@@ -59,14 +60,16 @@ class ExpenseWidget extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  expense.transactionType=='withdraw'?
-                  Text(
-                    '-N${PriceFormatter.formatPrice(expense.amount)}',
-                    style: MyText.mobileBold(color: Colors.red),
-                  ): Text(
-                    '+N${PriceFormatter.formatPrice(expense.amount)}',
-                    style: MyText.mobileBold(color: Colors.green),
-                  ),
+                  expense.transactionType == 'withdraw' ||
+                          expense.transactionType == 'savings_creation' 
+                      ? Text(
+                          '-N${PriceFormatter.formatPrice(expense.amount)}',
+                          style: MyText.mobileBold(color: Colors.red),
+                        )
+                      : Text(
+                          '+N${PriceFormatter.formatPrice(expense.amount)}',
+                          style: MyText.mobileBold(color: Colors.green),
+                        ),
                   Height(10.h),
                   Text(DateFormat('h:mm a').format(expense.date))
                 ],

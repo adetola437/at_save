@@ -201,7 +201,6 @@ class DetailsController extends State<DetailsScreen> {
 
   ///When a user wants to edit his goals details, the edit button is clicked and this action is executed
   goToUpdate(SavingsGoal goal) {
-    print(goal.id);
     context.push('/edit_screen', extra: goal);
     // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
     //   return EditScreen(

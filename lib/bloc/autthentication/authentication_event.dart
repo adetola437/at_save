@@ -28,3 +28,4 @@ class EmailSignInEvent extends AuthenticationEvent {
   List<Object> get props => [email, password];
 }
 class LogOutEvent extends AuthenticationEvent{}
+class VerifyEmailEvent extends AuthenticationEvent{}

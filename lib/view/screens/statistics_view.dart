@@ -172,13 +172,17 @@ class StatisticsView
                                 ],
                               )
                             : StickyGroupedListView<Expense, DateTime>(
-                                elements: state.expenses,
-                                groupBy: (expense) => expense.date,
+                                elements: state.expenses
+                                  ..sort((a, b) => b.date.compareTo(a.date)),
+                                groupBy: (expense) => DateTime(
+                                    expense.date.year,
+                                    expense.date.month,
+                                    expense.date.day),
                                 groupComparator: (value1, value2) =>
-                                    value2.compareTo(value1),
+                                    value1.compareTo(value2),
                                 itemComparator: (element1, element2) =>
                                     element1.date.compareTo(element2.date),
-                                order: StickyGroupedListOrder.ASC,
+                                order: StickyGroupedListOrder.DESC,
                                 groupSeparatorBuilder: (Expense transaction) {
                                   final DateTime date = transaction.date;
                                   return Padding(

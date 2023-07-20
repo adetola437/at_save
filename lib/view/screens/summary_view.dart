@@ -11,14 +11,13 @@ import '../../bloc/target/target_bloc.dart';
 import '../../bloc/user/user_bloc.dart';
 import '../../boiler_plate/stateless_view.dart';
 import '../../controller/summary_controller.dart';
-import '../../utils/price_format.dart';
 import '../../theme/colors.dart';
 import '../../theme/text.dart';
+import '../../utils/price_format.dart';
 import '../widgets/description_text.dart';
 import '../widgets/heading.dart';
 import '../widgets/height.dart';
 import '../widgets/nav_container.dart';
-import '../widgets/outline_button.dart';
 
 class SummaryView extends StatelessView<SummaryScreen, SummaryController> {
   const SummaryView(SummaryController controller, {Key? key})
@@ -64,25 +63,22 @@ class SummaryView extends StatelessView<SummaryScreen, SummaryController> {
             ),
           ),
           actions: <Widget>[
-            InkWell(
-                onTap: () {
-                  Navigator.of(context)
-                      .pop(false); // Return true when create is pressed
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
                 },
-                child: SizedBox(
-                    width: 140.w, child: const OutlineButton(text: 'Cancel'))),
+                child: const Text('cancel')),
             BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
                 if (state is UserSuccess) {
-                  return InkWell(
-                      onTap: () {
+                  return ElevatedButton(
+                      onPressed: () {
                         Navigator.of(context)
                             .pop(true); // Return true when create is pressed
 
                         controller.createGoal(state.user.walletBalance!);
                       },
-                      child: SizedBox(
-                          width: 140.w, child: Button(text: 'Create')));
+                      child: const Text('Create'));
                 }
                 return Container();
               },

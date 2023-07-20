@@ -26,11 +26,11 @@ class Repository {
   Future populateGoals(List<SavingsGoal> goals) =>
       localDatabase.populateGoals(goals);
 
-///Updates the list of savings transactions in the local database
+  ///Updates the list of savings transactions in the local database
   Future populateSavingsTransactions(List<SavingsTransaction> transactions) =>
       localDatabase.populateSavingsTransaction(transactions);
 
-///Updates the list of budgets in the local database
+  ///Updates the list of budgets in the local database
   Future<List<Budget>> populateBudgets(List<Budget> budgets) async {
     return await localDatabase.populateBudget(budgets);
   }
@@ -40,7 +40,7 @@ class Repository {
     return await remoteDatabase.saveGoal(goal);
   }
 
-///creates a lsavings goal in the local database
+  ///creates a lsavings goal in the local database
   Future createLocalGoal(SavingsGoal goal) async {
     return await localDatabase.saveGoal(goal);
   }
@@ -80,12 +80,12 @@ class Repository {
     await remoteDatabase.createExpensesTransaction(expense);
   }
 
-///gets the list of expense transaction from firebase
+  ///gets the list of expense transaction from firebase
   Future<List<Expense>> getRemoteExpense() async {
     return await remoteDatabase.getExpensesTransactions();
   }
 
-/// 
+  ///
   Future<List<Budget>> getLocalBudgets() async {
     return await localDatabase.fetchBudgets();
   }
@@ -112,7 +112,7 @@ class Repository {
     await remoteDatabase.createSavingsTransaction(transaction);
   }
 
-  Future<bool> updateSavingsGoal(String id, String description, String title,
+  Future<bool> updateSavingsGoal(String id, String title, String description,
       double targetAmount, DateTime date) async {
     return await remoteDatabase.updateSavings(
         id, title, description, targetAmount, date);
@@ -174,7 +174,7 @@ class Repository {
     //await manager.clearSharedPreferences();
   }
 
-/// This is the method that checks each goal transaction and sends a push notificatiom
+  /// This is the method that checks each goal transaction and sends a push notificatiom
   void checkTargetDatesAndSendNotifications() async {
     String? token = await manager.getMessagingToken();
     final savings = await localDatabase
@@ -193,12 +193,11 @@ class Repository {
 
   /// Method to trigger daily schedule
   void scheduleSavingsNotifications() {
-  final cron = Cron();
+    final cron = Cron();
 
-  // Schedule the task to run daily at a specific time (e.g., 9:00 AM)
-  cron.schedule(Schedule.parse('0 9 * * *'), () {
-    checkTargetDatesAndSendNotifications();
-  });
-}
-
+    // Schedule the task to run daily at a specific time (e.g., 9:00 AM)
+    cron.schedule(Schedule.parse('0 9 * * *'), () {
+      checkTargetDatesAndSendNotifications();
+    });
+  }
 }

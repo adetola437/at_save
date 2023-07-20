@@ -7,12 +7,12 @@ import 'package:at_save/model/user.dart' as adduser;
 class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-/// Firebase auth to sign user up with email and password
+
+  /// Firebase auth to sign user up with email and password
   Future<void> signUpWithEmail(
-   
       String email, String password, String name, String phoneNumber) async {
     try {
-       print('Signing up');
+      print('Signing up');
       final credential = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
 
@@ -27,6 +27,8 @@ class AuthRepository {
       await reference.doc(credential.user!.uid).set(user.toJson());
 
       Fluttertoast.showToast(msg: 'Sign Up Successful');
+
+      await FirebaseAuth.instance.currentUser?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         Fluttertoast.showToast(msg: 'This Password is too weak');
@@ -42,7 +44,11 @@ class AuthRepository {
       throw e;
     }
   }
-   Future<void> signInWithEmail(String email, String password) async {
+    User? getCurrentUser() {
+    return FirebaseAuth.instance.currentUser;
+  }
+
+  Future<void> signInWithEmail(String email, String password) async {
     try {
       final credential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
@@ -78,5 +84,11 @@ class AuthRepository {
       );
       throw e;
     }
+  }
+
+  Future passwordReset(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email.trim());
+    } catch (e) {}
   }
 }

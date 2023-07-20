@@ -26,7 +26,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     var localUsers = await repository.localUsers();
     try {
       if (isConnected == false) {
-        print('local users');
         emit(UserSuccess(user: localUsers!));
       } else {
         final remoteUsers = await repository.remoteUsers();

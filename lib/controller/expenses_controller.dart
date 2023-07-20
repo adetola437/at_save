@@ -20,6 +20,7 @@ class ExpensesScreen extends StatefulWidget {
 }
 
 class ExpensesController extends State<ExpensesScreen> {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController amountController = TextEditingController();
 
@@ -139,6 +140,8 @@ class ExpensesController extends State<ExpensesScreen> {
 
   @override
   void dispose() {
+    nameController.dispose();
+    amountController.dispose();
     super.dispose();
   }
 
@@ -156,12 +159,14 @@ class ExpensesController extends State<ExpensesScreen> {
   // }
   ///method called to create a new budget
   void createBudget() async {
-    context.read<BudgetBloc>().add(CreateBudgetEvent(
-        budgetAmount: double.parse(amountController.text),
-        budgetName: nameController.text,
-        color: getColorValue(generateRandomColor())));
-    nameController.clear();
-    amountController.clear();
+    if (formKey.currentState!.validate()) {
+      context.read<BudgetBloc>().add(CreateBudgetEvent(
+          budgetAmount: double.parse(amountController.text),
+          budgetName: nameController.text,
+          color: getColorValue(generateRandomColor())));
+      nameController.clear();
+      amountController.clear();
+    }
   }
 
   loading() {
@@ -291,4 +296,6 @@ class ExpensesController extends State<ExpensesScreen> {
   pushError() {
     context.go('/error', extra: 'Error creating budget');
   }
+
+  // void createBudget() {}
 }

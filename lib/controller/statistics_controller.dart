@@ -26,7 +26,7 @@ class StatisticsController extends State<StatisticsScreen> {
   @override
   Widget build(BuildContext context) => StatisticsView(this);
 
-  /// triggers the withdrae feature
+  /// triggers the withdraw feature
   pushWithdraw() async {
     final bool isConnected = await InternetConnectionChecker().hasConnection;
     if (isConnected == true) {

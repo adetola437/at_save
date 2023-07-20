@@ -1,4 +1,3 @@
-import 'package:at_save/controller/success_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -56,7 +55,7 @@ class DepositController extends State<DepositScreen> {
       context.read<ExpenseTransactionBloc>().add(CreateExpenseTransaction(
           description: descriptionController.text,
           amount: double.parse(amountController.text),
-          category: 'Savings',
+          category: 'Deposit',
           date: DateTime.now(),
           id: '',
           transactionType: 'deposit'));
